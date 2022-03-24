@@ -1,0 +1,122 @@
+		
+<%- include("../../include/head")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+					<%- include("../../include/authNaveBare")  %> 
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+					<%- include("../../include/notification")  %> 
+					<div class="row">
+						<div class="col-md-10 offset-md-1">
+
+                            <!-- Register Content -->
+                            <div class="account-content">
+                                <div class="row align-items-center justify-content-center">
+                                    <div class="col-md-7 col-lg-6 login-left">
+                                        <img src="/frontEnd/assets/img/login-banner.png" class="img-fluid" alt="Doccure Register">	
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 login-right">
+                                        <div class="login-header">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h3>Doctor Register <!--<a href="doctor-register.html">Are you a Doctor?</a>--></h3>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Register Form -->
+                                        <form action="signUp" method="post" enctype="multipart/form-data">
+                                            <div class="form-group form-focus">
+                                                <input type="text" name="fName" class="form-control floating">
+                                                <label class="focus-label">Frist Name</label>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.fName) { %>
+                                                        <span class="text-danger"><%=validationError.fName[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>   
+                                            </div>
+                                            <div class="form-group form-focus">
+                                                <input type="text" name="lName" class="form-control floating">
+                                                <label class="focus-label">Last Name</label>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.lName) { %>
+                                                        <span class="text-danger"><%=validationError.lName[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>   
+                                            </div>
+                                            <div class="form-group form-focus">
+                                                <input type="Email"  name="email" class="form-control floating">
+                                                <label class="focus-label">Email</label>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.email) { %>
+                                                        <span class="text-danger"><%=validationError.email[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>   
+                                            </div>
+                                            <div class="form-group form-focus">
+                                                <input type="password"  name="password" class="form-control floating">
+                                                <label class="focus-label">Create Password</label>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.password) { %>
+                                                        <span class="text-danger"><%=validationError.password[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>   
+                                            </div>
+                                            <div class="form-group form-focus">
+                                                <input type="password"  name="confirmPassword" class="form-control floating">
+                                                <label class="focus-label">Resete Password</label>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.confirmPassword) { %>
+                                                        <span class="text-danger"><%=validationError.confirmPassword[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>   
+                                            </div>
+
+                                            <div class="upload-img" style="margin-bottom:20px">
+                                                <div class="change-photo-btn" style="width:100%">
+                                                    <span><i class="fa fa-upload "></i> Graduation certificate</span>
+                                                    <input class="d-block upload" style="width:100%" type="file" name="Graduation">
+                                                </div>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.Graduation) { %>
+                                                        <span class="text-danger"><%=validationError.Graduation[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>  
+                                            </div>
+
+                                            <div class="upload-img" style="margin-bottom:20px">
+                                                <div class="change-photo-btn" style="width:100%">
+                                                    <span><i class="fa fa-upload "></i> birth certificate</span>
+                                                    <input class="d-block upload" style="width:100%" type="file" name="birthImage">
+                                                </div>
+                                                <% if (validationError) { %>
+                                                    <% if (validationError.birthImage) { %>
+                                                        <span class="text-danger"><%=validationError.birthImage[0].msg %></span>
+                                                    <% } %>
+                                                <% } %>  
+                                            </div>
+
+                           
+                                            <button class="btn btn-primary btn-block btn-md login-btn" style="font-size:14px" type="submit">Sign Up</button>
+                                            <div class="text-center dont-have">Already Have Account <a href="/doctor/signIn">Login</a></div>
+                                        </form>
+                                        <!-- /Register Form -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Register Content -->
+								
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+		</div>
+		<!-- /Main Wrapper -->
+        <%- include("../../include/footer.ejs")  %> 
+        <%- include("../../include/footer_script.ejs")  %> 
+    </body>
+</head>

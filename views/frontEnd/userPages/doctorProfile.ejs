@@ -1,0 +1,613 @@
+		<style>
+			li.comment_test .comment i.active {
+				color:rgb(216, 195, 11)
+			}
+			.addRate i.active , .review-count i.active {
+				color:rgb(216, 195, 11)
+			}
+
+		</style>
+<%- include("../include/head.ejs")  %> 
+<%- include("../include/alert")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+            <%- include("../include/naveBare.ejs")  %> 
+		<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Doctor Profile</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+
+
+		<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+
+					<!-- Doctor Widget -->
+					<div class="card">
+						<div class="card-body">
+							<div class="doctor-widget">
+								<div class="doc-info-left">
+									<div class="doctor-img">
+                                        <img class="img-fluid" alt="User Image" src="/backEnd/assets/img/doctors/<%= doctor.doctorImage ? doctor.doctorImage.split("--")[0] : "avatar.png" %>">
+									</div>
+									<div class="doc-info-cont">
+										<h4 class="doc-name"><%= doctor.fName + " " + doctor.lName %></h4>
+										<p class="doc-speciality"><%= doctor.service ? doctor.service : "not Edit Yet" %></p>
+										<p class="doc-department"><img src="/backEnd/assets/img/specialities/<%= doctor.DoctorSpecialist ? doctor.DoctorSpecialist.image.split("--")[0] : "01.jpg" %>" class="img-fluid" alt="Speciality"><%= doctor.DoctorSpecialist ? doctor.DoctorSpecialist.name : "not Edit Before" %></p>
+										<div class="rating">
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star"></i>
+											<span class="d-inline-block average-rating">(35)</span>
+										</div>
+										<div class="clinic-details">
+											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <%= doctor.Addres %> - <a href="javascript:void(0);">Get Directions</a></p>
+										</div>
+									</div>
+								</div>
+								<div class="doc-info-right">
+									<div class="clini-infos">
+										<ul>
+											<li><i class="far fa-thumbs-up"></i> 99%</li>
+											<li><i class="far fa-comment"></i> 35 Feedback</li>
+											<li><i class="fas fa-map-marker-alt"></i> Newyork, USA</li>
+										</ul>
+									</div>
+									<div class="doctor-action">
+										<a href="javascript:void(0)" class="btn btn-white fav-btn">
+											<i class="far fa-bookmark"></i>
+										</a>
+										<a href="chat.html" class="btn btn-white msg-btn">
+											<i class="far fa-comment-alt"></i>
+										</a>
+										<a href="javascript:void(0)" class="btn btn-white call-btn" data-toggle="modal" data-target="#voice_call">
+											<i class="fas fa-phone"></i>
+										</a>
+										<a href="javascript:void(0)" class="btn btn-white call-btn" data-toggle="modal" data-target="#video_call">
+											<i class="fas fa-video"></i>
+										</a>
+									</div>
+									<div class="clinic-booking">
+										<a class="apt-btn" href="booking.html">Appointment</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Widget -->
+					
+					<!-- Doctor Details Tab -->
+					<div class="card">
+						<div class="card-body pt-0">
+						
+							<!-- Tab Menu -->
+							<nav class="user-tabs mb-4">
+								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+									<li class="nav-item">
+										<a class="nav-link active" href="#doc_overview" data-toggle="tab">Overview</a>
+									</li>
+			
+									<li class="nav-item">
+										<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#doc_business_hours" data-toggle="tab">Business Hours</a>
+									</li>
+								</ul>
+							</nav>
+							<!-- /Tab Menu -->
+							
+							<!-- Tab Content -->
+							<div class="tab-content pt-0">
+							
+								<!-- Overview Content -->
+								<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
+									<div class="row">
+										<div class="col-md-12 col-lg-9">
+										
+											<!-- About Details -->
+											<div class="widget about-widget">
+												<h4 class="widget-title">About Me</h4>
+												<p><%= doctor.aboutMe %></p>
+											</div>
+											<!-- /About Details -->
+										
+											<!-- Education Details -->
+											<div class="widget education-widget">
+												<h4 class="widget-title">Education</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">degree : <%= doctor.degree %></a>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">collega : <%= doctor.collega %></a>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">completion : <%= doctor.Completion %></a>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Education Details -->
+									
+											<!-- Experience Details -->
+											<div class="widget experience-widget">
+												<h4 class="widget-title">Work & Experience</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<span class="name">Hospital Name : <%= doctor.hospitalName %></span>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<span class="name">from : <%= doctor.from %></span>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<span class="name">to : <%= doctor.to %></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Experience Details -->
+								
+											<!-- Awards Details -->
+											<div class="widget awards-widget">
+												<h4 class="widget-title">Awards</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<% doctor.awardes.split(",").forEach((element , i) => { %>
+															<li>
+																<div class="experience-user">
+																	<div class="before-circle"></div>
+																</div>
+																<div class="experience-content">
+																	<div class="timeline-content">
+																		<p class="exp-year"><%= element %></p>
+																		<p>At : <%= doctor.awardesDate.split(",")[i] %></p>
+																	</div>
+																</div>
+															</li>
+                                                        <% }) %>
+													</ul>
+												</div>
+											</div>
+											<!-- /Awards Details -->
+											
+											<!-- Services List -->
+											<div class="service-list">
+												<h4>Services</h4>
+												<ul class="clearfix">
+                                                    <% doctor.service.split(",").forEach(element => { %>
+                                                     <li><%= element %></li>
+                                                    <% }) %>
+												</ul>
+											</div>
+											<!-- /Services List -->
+											
+											<!-- Specializations List -->
+											<div class="service-list">
+												<h4>Specializations</h4>
+												<ul class="clearfix">
+                                                    <li><%= doctor.DoctorSpecialist.name %></li>
+												</ul>
+											</div>
+											<!-- /Specializations List -->
+
+										</div>
+									</div>
+								</div>
+								<!-- /Overview Content -->
+								
+	
+								
+								<!-- Reviews Content -->
+								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
+								
+									<!-- Review Listing -->
+									<div class="widget review-listing">
+										<ul class="comments-list">
+											<% if (doctor.doctorComment.length > 0) { %>
+											<% doctor.doctorComment.forEach(element => { %>
+												<li>
+													<div class="comment">
+														<img class="avatar avatar-sm rounded-circle" alt="User Image" src="/backEnd/assets/img/patients/<%= element.commentUser.image.split("--")[0] %>">
+														<div class="comment-body">
+															<div class="meta-data">
+																<span class="comment-author"><%= element.commentUser.fName + " " + element.commentUser.lName %></span>
+																<span class="comment-date"><%= FormData(element.createAt , "time") %></span>
+																<div class="review-count rating">
+																	<i class="fas fa-star <%= element.Rate >= 1 ? 'active' : '' %> "></i>
+																	<i class="fas fa-star <%= element.Rate >= 2 ? 'active' : '' %> "></i>
+																	<i class="fas fa-star <%= element.Rate >= 3 ? 'active' : '' %> "></i>
+																	<i class="fas fa-star <%= element.Rate >= 4 ? 'active' : '' %> "></i>
+																	<i class="fas fa-star <%= element.Rate >= 5 ? 'active' : '' %> "></i>
+																</div>
+															</div>
+															<p class="comment-content">
+																<%= element.comment %>
+															</p>
+															<div class="comment-reply">
+																<p class="recommend-btn">
+																	<span>Recommend?</span>
+																	<a href="#" class="like-btn">
+																		<i class="far fa-thumbs-up"></i> Yes
+																	</a>
+																	<a href="#" class="dislike-btn">
+																		<i class="far fa-thumbs-down"></i> No
+																	</a>
+																</p>
+															</div>
+														</div>
+													</div>
+												</li>
+							
+											<% }) %>
+												<div class="all-feedback text-center">
+													<a href="#" class="btn btn-primary btn-sm">
+														Show all feedback
+													</a>
+												</div>	
+											<% } else { %>
+												<div class="alert alert-danger">ther is now comments on this doctor</div>
+											<% } %>
+										</ul>
+										
+										<!-- Show All -->
+
+										<!-- /Show All -->
+										
+									</div>
+									<!-- /Review Listing -->
+								
+									<% if (user) { %>
+									 <!-- Write Review -->
+									<div class="write-review">
+										<h4>Write a review for <strong>Dr. Darren Elder</strong></h4>
+										
+										<!-- Write Review Form -->
+										<form>
+											<div class="form-group">
+												<label>Review</label>
+												<div class="addRate">
+											
+														<i class="fa fa-star" data_number="1"></i>
+														<i class="fa fa-star" data_number="2"></i>
+														<i class="fa fa-star" data_number="3"></i>
+														<i class="fa fa-star" data_number="4"></i>
+														<i class="fa fa-star" data_number="5"></i>
+													</div>
+											</div>
+
+											<div class="form-group">
+												<label>Your review</label>
+												<textarea id="review_desc" maxlength="100" class="commentText form-control"></textarea>
+											  
+											  <div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
+											</div>
+											<hr>
+	
+											<div class="submit-section">
+												<button type="button" class="btn addComment btn-primary submit-btn">Add Review</button>
+											</div>
+										</form>
+										<!-- /Write Review Form -->
+										
+									</div>
+									<!-- /Write Review -->
+									<% } else { %>
+										<div class="alert alert-danger">if you wont to add comment sign in after</div>
+										<a href="/pationt/signIn" class="btn btn-block btn-success">Sign In</a>
+									<% } %>
+						
+								</div>
+								<!-- /Reviews Content -->
+								
+								<!-- Business Hours Content -->
+								<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
+									<div class="row">
+										<div class="col-md-6 offset-md-3">
+										
+											<!-- Business Hours Widget -->
+											<div class="widget business-widget">
+												<div class="widget-content">
+													<% if (schdual) { %>
+													 <div class="listing-hours">
+		
+														<div class="listing-day">
+															<div class="day">Monday</div>
+															<div class="time-items">
+																<% if (schdual.Monday) { %>
+																	<% schdual.Monday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>
+																<% } else { %>
+																	<span>holiday</span>
+																<% } %>															
+															</div>
+														</div>
+														<hr>
+														<div class="listing-day">
+															<div class="day">Tuesday</div>
+															<div class="time-items">
+																<% if (schdual.Tuesday) { %>
+																	<% schdual.Tuesday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>	
+																<% } else { %>
+																	<span>holiday</span>
+																<% } %>													
+															</div>
+														</div>
+														<hr>
+														<div class="listing-day">
+															<div class="day">Wednesday</div>
+															<div class="time-items">
+																<% if (schdual.Wednesday) { %>
+																	<% schdual.Wednesday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>	
+																<% }  else { %>
+																	<span>holiday</span>
+																<% } %>																	
+															</div>
+														</div>
+														<hr>
+														<div class="listing-day">
+															<div class="day">Thursday</div>
+															<div class="time-items">
+																<% if (schdual.Thursday) { %>
+																	<% schdual.Thursday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>
+																<% } else { %>
+																	<span>holiday</span>
+																<% } %>	
+															</div>
+														</div>
+														<hr>
+														<div class="listing-day">
+															<div class="day">Friday</div>
+															<div class="time-items">
+																<% if (schdual.Friday) { %>
+																	<% schdual.Friday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>
+																<% }  else { %>
+																	<span>holiday</span>
+																<% } %>																	
+															</div>
+														</div>
+														<hr>
+														<div class="listing-day">
+															<div class="day">Saturday</div>
+															<div class="time-items">
+																<% if (schdual.Saturday) { %>
+																	<% schdual.Saturday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>
+																<% } else { %>
+																	<span>holiday</span>
+																<% } %>										
+															</div>
+														</div>
+														<hr>
+														<div class="listing-day closed">
+															<div class="day">Sunday</div>
+															<div class="time-items">
+																<% if (schdual.Sunday) { %>
+																	<% schdual.Sunday.forEach(element => { %>
+																		<span class="time"><%= element %></span>
+																	<% }) %>
+																<% } else { %>
+																	<span>holiday</span>
+																<% } %>									
+															</div>
+														</div>
+													</div>
+													<% } else { %>
+														<div class="alert alert-danger">
+															this doctor hane no schedual
+														</div>
+													<%}%>
+												</div>
+											</div>
+											<!-- /Business Hours Widget -->
+									
+										</div>
+									</div>
+								</div>
+								<!-- /Business Hours Content -->
+								
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Details Tab -->
+
+				</div>
+			</div>		
+			<!-- /Page Content -->
+		</div>
+		<!-- /Main Wrapper -->
+
+
+				<!-- Comment List -->
+				<li class="d-none comment_test">
+					<div class="comment">
+						<img class="avatar avatar-sm rounded-circle" alt="User Image" src="">
+						<div class="comment-body">
+							<div class="meta-data">
+								<span class="comment-author"></span>
+								<span class="comment-date">now</span>
+								<div class="review-count rating">
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+								</div>
+							</div>
+							<p class="comment-content">
+								
+							</p>
+							<div class="comment-reply">
+								<p class="recommend-btn">
+									<span>Recommend?</span>
+									<a href="#" class="like-btn">
+										<i class="far fa-thumbs-up"></i> Yes
+									</a>
+									<a href="#" class="dislike-btn">
+										<i class="far fa-thumbs-down"></i> No
+									</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!-- /Comment List -->
+        <%- include("../include/footer.ejs")  %> 
+        <%- include("../include/footer_script.ejs")  %> 
+		
+		<script src="/frontEnd/assets/js/slick.js"></script>
+		<!-- Custom JS -->
+		<script src="/frontEnd/assets/js/script.js"></script>
+		<script>
+      		var alert2 = document.querySelector(".alert2");
+			var addComment = document.querySelector(".addComment")
+			var comments_list = document.querySelector(".comments-list")
+			var rateIcon = document.querySelectorAll(".addRate i")
+			addComment.onclick = function(e) {
+				var count = 0;
+				var comment = document.querySelector(".commentText") 
+				if(comment.value == "" || comment.value.length > 100) {
+					document.querySelector(".alert2 > div").innerHTML = "comment shouldnt be null or more than 100 charcter"
+					document.querySelector(".alert2").classList.add("active")
+					setTimeout(() => {
+					document.querySelector(".alert2").classList.remove("active")
+					} , 3000)
+					return
+				}
+				rateIcon.forEach(ele => {
+					if(ele.classList.contains("active")) {
+						count++
+					}
+				})
+				$.ajax({
+					data : {
+						userId : '<%= user ? user.id : "" %>',
+						doctorId : '<%= doctor.id %>',
+						comment : comment.value,
+						rate : count
+					},
+					url:"/addDoctorComment",
+					type : "post",
+					success(data) {
+						var testComment = document.querySelector(".comment_test").cloneNode(true)
+						testComment.classList.remove("d-none")
+						testComment.querySelector(".comment .comment-content").innerHTML = comment.value
+						comment.value = ""
+						testComment.querySelector(".avatar").setAttribute("src" , `/backEnd/assets/img/patients/${data.commentUser.image.split("--")[0]}`)
+						testComment.querySelector(".comment-author").innerHTML = `${data.commentUser.fName + " " + data.commentUser.lName}`
+						testComment.querySelectorAll(".review-count .fas").forEach((ele , i) => {
+							if(count > i) {
+								console.log(count + " " + i)
+								ele.classList.add("active")
+							}
+						})
+						if(comments_list.querySelector(".alert")) {
+							comments_list.querySelector(".alert").remove()
+						}
+						comments_list.insertBefore(testComment , comments_list.firstElementChild)
+						rateIcon.forEach(element => {
+							element.className = "fa fa-star"
+						})
+
+						document.querySelector(".alert2 > div").innerHTML = "comment add successful"
+						document.querySelector(".alert2").classList.add("active")
+						setTimeout(() => {
+						document.querySelector(".alert2").classList.remove("active")
+						} , 3000)
+					},
+					error() {
+						document.querySelector(".alert2 > div").innerHTML = "thir is error"
+						document.querySelector(".alert2").classList.add("active")
+						setTimeout(() => {
+						document.querySelector(".alert2").classList.remove("active")
+						} , 3000)
+					}
+				})
+			}
+
+			rateIcon.forEach(element => {
+				element.onmousemove = function() {
+					rateIcon.forEach((ele , i) => {
+						if(i < element.getAttribute("data_number")) {
+							ele.className = "fa fa-star active"
+						} else {
+							ele.className = "fa fa-star "
+						}
+					})
+				}
+			})
+
+		</script>
+    </body>
+</head>

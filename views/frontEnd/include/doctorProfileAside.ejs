@@ -1,0 +1,98 @@
+
+
+<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+  <!-- Profile Sidebar -->
+  <div class="profile-sidebar">
+    <div class="widget-profile pro-widget-content">
+      <div class="profile-info-widget">
+        <a href="#" class="booking-doc-img">
+						<img src="<%= doctor.doctorImage ? "/backEnd/assets/img/doctors/" + doctor.doctorImage.split("--")[0] : "/backEnd/assets/img/doctors/avatar.png" %>" alt="User Image">
+        </a>
+        <div class="profile-det-info">
+          <h3>Dr. <%= doctor.fName + " " + doctor.lName %></h3>
+
+          <div class="patient-details">
+            <h5 class="mb-0"><%= doctor.Addres ?  doctor.Addres : "add your specialist" %></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-widget">
+      <nav class="dashboard-menu">
+        <ul>
+          <li class="<%= URL == "/doctour_dashpored" ? "active" : "" %>">
+            <a href="doctour_dashpored">
+              <i class="fas fa-columns"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/appointMent" ? "active" : "" %>">
+            <a href="appointMent">
+              <i class="fas fa-calendar-check"></i>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/myPationts" ? "active" : "" %>">
+            <a href="myPationts">
+              <i class="fas fa-user-injured"></i>
+              <span>My Patients</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/schedual" ? "active" : "" %>">
+            <a href="schedual">
+              <i class="fas fa-hourglass-start"></i>
+              <span>Schedule Timings</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/invoices" ? "active" : "" %>">
+            <a href="invoices">
+              <i class="fas fa-file-invoice"></i>
+              <span>Invoices</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/reviews" ? "active" : "" %>">
+            <a href="reviews">
+              <i class="fas fa-star"></i>
+              <span>Reviews</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/chat_doctor" ? "active" : "" %>">
+            <a href="chat_doctor">
+              <i class="fas fa-comments"></i>
+              <span>Message</span>
+              <small class="unread-msg">23</small>
+            </a>
+          </li>
+          <li class="<%= URL == "/doctor_setings" ? "active" : "" %>">
+            <a href="doctor_setings">
+              <i class="fas fa-user-cog"></i>
+              <span>Profile Settings</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/socialmedia" ? "active" : "" %>">
+            <a href="socialmedia">
+              <i class="fas fa-share-alt"></i>
+              <span>Social Media</span>
+            </a>
+          </li>
+          <li class="<%= URL == "/resetPassword" ? "active" : "" %>">
+            <a href="resetPassword">
+              <i class="fas fa-lock"></i>
+              <span>Change Password</span>
+            </a>
+          </li>
+          <li>
+              <a style="padding:0">
+                <form method="post" action="/doctor/signOut"> 
+                  <button class="dropdown-item" style="padding:16px 20px">
+                    <i class="fa fa-fw fa-sign-out-alt"></i>Sign Out
+                  </button>
+                </form> 
+              </a>     
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- /Profile Sidebar -->
+</div>

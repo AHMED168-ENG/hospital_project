@@ -1,0 +1,323 @@
+<%- include("./include/head")  %> 
+<%- include("./include/aside")  %> 
+<%- include("./include/navePare")  %> 
+<%- include("./include/alert")  %> 
+</head>
+    </body>
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                        <div class="row">
+                            <div class="col-sm-7 col-auto">
+                                <h3 class="page-title">Specialities</h3>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Specialities</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-5 col">
+                                <a href="#Add_Specialities_details" data-toggle="modal" class="btn btn-primary float-right mt-2">Add</a>
+                            </div>
+                        </div>
+                        <%- include("./include/notification")  %> 
+                    </div>
+                    <!-- /Page Header -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="datatable table table-hover table-center mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Specialities</th>
+                                                    <th class="text-right">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% AllSpecialities.forEach((element , i) => { %>
+                                                    <tr>
+                                                        <td>#SP00<%= i %></td>
+                                                        
+                                                        <td>
+                                                            <h2 class="table-avatar">
+                                                                <a href="profile.html" class="avatar avatar-sm mr-2">
+                                                                    <img class="avatar-img" src="/backEnd/assets/img/specialities/<%= element.image.split("--")[0] %>" alt="Speciality">
+                                                                </a>
+                                                                <a href="profile.html"><%= element.name %></a>
+                                                            </h2>
+                                                        </td>
+                                                    
+                                                        <td class="text-right">
+                                                            <div class="actions">
+                                                                <a href="/" class="btn btn-sm ">
+                                                                    <input onclick="activeSpecialist(event , '<%= element.id %>')" <%= element.active ? "checked" : "" %> name="active"  class="check <%= element.active ? 'checked' : '' %>" type="checkbox" value="1" id="status__<%= element.id  %>"></input>
+                                                                    <label for="status__<%= element.id  %>" class="checktoggle">active</label>
+                                                                </a>
+                                                                <a onclick="getSpecifieData(event , '<%= element.id %>')" class="btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                                    <i class="fe fe-pencil"></i> Edit
+                                                                </a>
+                                                                <form action="deleteSpecialist" class="d-inline-block" method="post">
+                                                                    <input type="hidden" name="id" id="" value="<%= element.id %>">
+                                                                    <input type="hidden" name="deletedImage" id="" value="<%= element.image %>">
+                                                                    <button class="btn btn-sm bg-danger-light">
+                                                                        <i class="fe fe-trash"></i> Delete
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>			
+                    </div>
+                </div>			
+            </div>
+            <!-- /Page Wrapper -->
+		
+			<!-- Add Modal -->
+			<div class="modal fade" id="Add_Specialities_details" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Add Specialities</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="formData">
+								<div class="row form-row">
+									<div class="col-12 col-sm-6">
+										<div class="form-group">
+											<label>Specialities</label>
+											<input type="text" name="name" placeholder="Enter Specific Name" class="form-control">
+                                            <span class="notific" data_name="name"></span>
+										</div>
+									</div>
+									<div class="col-12 col-sm-6">
+										<div class="form-group">
+											<label>Image</label>
+											<input name="image" accept="image/*" type="file"  class="form-control">
+                                            <span  class="notific" data_name="image"></span>
+										</div>
+									</div>
+									<div class="col-12 ">
+										<div class="form-group">
+											<label>Description</label>
+											<textarea name="description"  class="form-control" placeholder="Enter Specific Description"></textarea>
+                                            <span  class="notific" data_name="description"></span>
+                                        </div>
+									</div>
+									<div class="col-12 " style="margin-bottom:20px">
+										<div class="status-toggle">
+                                            <label for="status_1">Section Activation Control</label>
+                                            <input checked name="active"  class="check" type="checkbox" id="status_1"></input>
+											<label value="1" for="status_1" class="checktoggle">active</label>
+                                        </div>
+									</div>
+									
+								</div>
+								<button type="button"  onclick="specialistOperation(event , 'add')" class="btn btn-primary btn-block">Save Changes</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /ADD Modal -->
+
+            <!-- Edit Details Modal -->
+			<div class="modal fade" id="edit_specialities_details" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Edit Specialities</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+                            <form id="formData">
+                                <div class="row form-row">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="form-group">
+                                            <label>Specialities</label>
+                                            <input type="text" name="name" placeholder="Enter Specific Name" class="form-control inputs">
+                                            <span class="notific" data_name="name"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="form-group">
+                                            <label>Image</label>
+                                            <input name="image" accept="image/*" type="file"  class="form-control">
+                                            <input name="oldImage" type="hidden"  class="form-control oldImage">
+                                            <input name="specialistId" type="hidden"  class="form-control specialistId">
+                                            <span  class="notific" data_name="image"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 ">
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <textarea name="description"  class="form-control inputs" placeholder="Enter Specific Description"></textarea>
+                                            <span  class="notific" data_name="description"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 " style="margin-bottom:20px">
+                                        <div class="status-toggle">
+                                            <label for="status_2">Section Activation Control</label>
+                                            <input name="active"  class="check activat" type="checkbox" value="1" id="status_2"></input>
+                                            <label for="status_2" class="checktoggle">active</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 " style="margin-bottom:20px">
+                                        <div class="status-toggle">
+                                            <div class="image">
+                                                <img src="" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <button type="button" class="btn btn-primary btn-block " onclick="specialistOperation(event , 'edit')">Save Changes</button>
+                            </form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Edit Details Modal -->
+
+        <%- include("./include/footer_script")  %> 
+        		
+		<!-- Datatables JS -->
+		<script src="/backEnd/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="/backEnd/assets/plugins/datatables/datatables.min.js"></script>
+        <script  src="/backEnd/assets/js/script.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+        <script>
+            var alert2 = document.querySelector(".alert2");
+            function specialistOperation(e , type) {
+                var formData = e.target.parentElement
+                var dataSpecialist = new FormData(formData)
+                dataSpecialist
+                axios({
+                    method : "post",
+                    url  : type == "add" ? "/specialities/AddSpecialities" : "/specialities/EditSpecialities",
+                    data : dataSpecialist,
+                }).then(res => {
+                    res = res.data
+                    if(res.type == "error") {
+                        shirErrorNotification(res.data , formData)
+                    } else {
+                        emptyTheNotific(formData)
+                        window.location.href = (type == "add" ? "redirect_withMessage?type=success&message=Section has been added successfully" : "redirect_withMessage?type=success&message=Section has been edited successfully")
+                    }
+                })
+            }                    
+
+            function getSpecifieData(e , specificationId) {
+                if(e.target.classList.contains("fa")) {
+                    var buttonText = e.target.parentElement.innerHTML
+                } else {
+                    var buttonText = e.target.innerHTML
+                }
+                var buttonText = e.target.innerHTML
+                $.ajax({
+                    url : `getSpecifieData`,
+                    data : {
+                        id : specificationId
+                    },
+                    type : "post",
+                    success(data) {
+                        if(e.target.classList.contains("fa")) {
+                            e.target.parentElement.innerHTML = buttonText
+                        } else {
+                            e.target.innerHTML = buttonText
+                        }
+
+                        setDataToEdit(data)
+                    },
+                    beforeSend() {
+                        if(e.target.classList.contains("fa")) {
+                            e.target.parentElement.innerHTML = "<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>"
+                        } else {
+                            e.target.innerHTML = "<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>"
+                        }
+                    },
+                    error() {
+
+                    }
+                })
+            }
+
+
+
+            function shirErrorNotification(errors , form) {
+                var allNotific = form.querySelectorAll(".notific");
+                allNotific.forEach(ele => {
+                    if(errors[ele.getAttribute("data_name")]) {
+                        ele.innerHTML = errors[ele.getAttribute("data_name")][0].msg
+                    } else {
+                        ele.innerHTML = ""
+                    }
+                })
+            }
+
+            function setDataToEdit(data) {
+                var allInputes = document.querySelectorAll(".inputs");
+                console.log(data)
+                allInputes.forEach(ele => {
+                    if(data[ele.getAttribute("name")]) {
+                        ele.value = data[ele.getAttribute("name")]
+                    }
+                })
+                var actiat = document.querySelector(".activat");
+                if(data.active) {
+                    actiat.setAttribute("checked" , "")
+                }
+                var image = document.querySelector("form .image img")
+                var oldImage = document.querySelector("form .oldImage")
+                var specialistId = document.querySelector("form .specialistId")
+                image.setAttribute("src" , `/backEnd/assets/img/specialities/${data.image ? data.image.split("--")[0] : "01.jpg"} `)
+                oldImage.value = data.image
+                specialistId.value = data.id
+            }
+            function emptyTheNotific(form) {
+                var allNotific = form.querySelectorAll(".notific");
+                allNotific.forEach(ele => {
+                    ele.innerHTML = ""
+                })
+            }
+            function activeSpecialist(e , specialistId) {
+
+                var type = e.target.classList.toggle("checked")
+                $.ajax({
+                    url : "activeSpecialist",
+                    data : {
+                        specialistId,
+                        type : e.target.classList.contains("checked") ? "1" : "0"
+                    },
+                    type: "post",
+                    success(data) {
+                        console.log(data)
+                    },
+                    error() {
+
+                    }
+                })
+            }
+
+       </script>
+
+    </head>
+</body>

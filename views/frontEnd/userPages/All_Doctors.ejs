@@ -1,0 +1,197 @@
+<style>
+	.rating i.active {
+		color:rgb(224, 210, 5)
+	}
+</style>
+<%- include("../include/head.ejs")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+            <%- include("../include/naveBare.ejs")  %> 
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-8 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Search</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">2245 matches found for : Dentist In Bangalore</h2>
+						</div>
+						<div class="col-md-4 col-12 d-md-block d-none">
+							<div class="sort-by">
+								<span class="sort-title">Sort by</span>
+								<span class="sortby-fliter">
+									<select class=" select selectType" onchange="filter(event)">
+										<option class="sorting" value="rating_desc"  <%= Qyery.filter == "rating_desc" ? "selected" : "" %>>Rating</option>
+										<option class="sorting" value="createdAt_desc" <%= Qyery.filter == "createdAt_desc" ? "selected" : "" %>>Firest</option>
+										<option class="sorting" value="price_desc"  <%= Qyery.filter == "price_desc" ? "selected" : "" %>>Price Up</option>
+										<option class="sorting" value="price_asc"  <%= Qyery.filter == "price_asc" ? "selected" : "" %>>Price Down</option>
+									</select>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb --> 
+
+
+            <!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							<!-- Search Filter -->
+							<div class="card search-filter">
+								<div class="card-header">
+									<h4 class="card-title mb-0">Search Filter</h4>
+								</div>
+								<div class="card-body">
+								<div class="filter-widget">
+									<div class="cal-icon">
+										<input type="text" class="form-control datetimepicker" placeholder="Select Date">
+									</div>			
+								</div>
+								<div class="filter-widget">
+									<h4>Gender</h4>
+									<div>
+										<label class="custom_check">
+											<input <%= Qyery.gender_type == "1" ? "checked" : "" %> class="filter" data_type="1" type="radio" name="gender_type">
+											<span class="checkmark"></span> Male Doctor
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input <%= Qyery.gender_type == "0" ? "checked" : "" %> data_type="0" class="filter" type="radio" name="gender_type">
+											<span class="checkmark"></span> Female Doctor
+										</label>
+									</div>
+								</div>
+								<div class="filter-widget">
+									<h4>Select Specialist</h4>
+									<% specialist.forEach(element => { %>
+									<div>
+										<label class="custom_check">
+											<input data_type="<%= element.id %>" <%= Qyery.select_specialist == element.id ? "checked" : "" %> class="filter" type="radio" name="select_specialist">
+											<span class="checkmark"></span> <%= element.name %>
+										</label>
+									</div>
+									<% }) %>
+								</div>
+									<div class="btn-search">
+										<button type="button" class="btn btn-block">Search</button>
+									</div>	
+								</div>
+							</div>
+							<!-- /Search Filter -->
+							
+						</div>
+						
+						<div class="col-md-12 col-lg-8 col-xl-9">
+							<% if (doctors.length > 0) { %>
+							<% doctors.forEach(element => { %>
+                             							<!-- Doctor Widget -->
+							<div class="card">
+								<div class="card-body">
+									<div class="doctor-widget">
+										<div class="doc-info-left">
+											<div class="doctor-img">
+												<a href="doctor-profile.html">
+													<img src="/backEnd/assets/img/doctors/<%= element.doctorImage ? element.doctorImage.split("--")[0] : "avatar.png" %>" class="img-fluid" alt="User Image">
+												</a>
+											</div>
+											<div class="doc-info-cont">
+												<h4 class="doc-name"><a href="doctor-profile.html"><%= element.fName + " " + element.lName %></a></h4>
+												<p class="doc-speciality"><%= element.service ? element.service : "not edit yet" %></p>
+												<h5 class="doc-department"><img src="/backEnd/assets/img/specialities/<%= element.DoctorSpecialist ? element.DoctorSpecialist.image.split("--")[0] : "01.jpg" %>" class="img-fluid" alt="Speciality"><%= element.DoctorSpecialist ? element.DoctorSpecialist.name : "not Edit Before" %></h5>
+												<div class="rating">
+													
+													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 1 ? "active" :  "" %>"></i>
+													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 2 ? "active" :  "" %>"></i>
+													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 3 ? "active" :  "" %>"></i>
+													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 4 ? "active" :  "" %>"></i>
+													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 5 ? "active" :  "" %>"></i>
+													<span class="d-inline-block average-rating">(<%= element.userRate.length %>)</span>
+												</div>
+												<div class="clinic-details">
+													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <%= element.Addres %></p>
+												</div>
+
+											</div>
+										</div>
+										<div class="doc-info-right">
+											<div class="clini-infos">
+												<ul>
+													<li><i class="far fa-thumbs-up"></i> <%= Math.ceil((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) %>%</li>
+													<li><i class="far fa-comment"></i> <%= element.userRate.length %> Feedback</li>
+													<li><i class="fas fa-map-marker-alt"></i> Florida, USA</li>
+												</ul>
+											</div>
+											<div class="clinic-booking">
+												<a class="view-pro-btn" href="/doctorProfile/<%= element.id%>">View Profile</a>
+												<a class="apt-btn" href="booking.html"> Appointment</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- /Doctor Widget -->
+                            <% }) %>
+							<div class="load-more text-center">
+								<a class="btn btn-primary btn-sm" href="javascript:void(0);">Load More</a>	
+							</div>	
+							<% } else { %>	
+								<div class="alert alert-danger">no data to show</div>
+							<% } %>
+
+
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+		</div>
+		<!-- /Main Wrapper -->
+        <%- include("../include/footer.ejs")  %> 
+        <%- include("../include/footer_script.ejs")  %> 
+		<!-- Custom JS -->
+		<script src="/frontEnd/assets/js/script.js"></script>
+		<script>
+			document.querySelector(".btn-search").onclick = function () {
+				var selectType = document.querySelector(".selectType")
+				var Qyery = "?"
+				var filter = document.querySelectorAll(".filter")
+				filter.forEach(ele => {
+					if(ele.checked) {
+						Qyery += ele.getAttribute("name") + "=" + ele.getAttribute("data_type") + "&"
+					}
+				})
+				window.location.href = window.location.pathname + Qyery + (selectType.value ? `filter=${selectType.value}` : "")
+			}
+
+			function filter(e) {
+				var query = "?"
+				var filter = document.querySelectorAll(".filter")
+				filter.forEach(ele => {
+					if(ele.checked) {
+						query += ele.getAttribute("name") + "=" + ele.getAttribute("data_type") + "&"
+					}
+				})
+
+				window.location.href = window.location.pathname + query + "&" + `filter=${e.target.value}`
+
+			}
+		</script>
+    </body>
+</head>
