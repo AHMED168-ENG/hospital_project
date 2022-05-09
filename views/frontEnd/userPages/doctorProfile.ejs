@@ -1,12 +1,29 @@
-		<style>
-			li.comment_test .comment i.active {
-				color:rgb(216, 195, 11)
-			}
-			.addRate i.active , .review-count i.active {
-				color:rgb(216, 195, 11)
-			}
-
-		</style>
+<style>
+li.comment_test .comment i.active {
+	color:rgb(216, 195, 11)
+}
+.addRate i.active , .review-count i.active {
+	color:rgb(216, 195, 11)
+}
+.rating i.active {
+	color:rgb(224, 210, 5)
+}
+.enterAction {
+	display: flex;
+	align-items: center;
+}
+.enterAction > span {
+	padding:7px;
+	background:#eee;
+	margin:0 4px;
+	cursor: pointer;
+	border:1px solid #DDD;
+	opacity: 0.5;
+}
+.enterAction > span.active {
+	opacity: 1;
+}
+</style>
 <%- include("../include/head.ejs")  %> 
 <%- include("../include/alert")  %> 
 <body>
@@ -50,16 +67,17 @@
 										<p class="doc-speciality"><%= doctor.service ? doctor.service : "not Edit Yet" %></p>
 										<p class="doc-department"><img src="/backEnd/assets/img/specialities/<%= doctor.DoctorSpecialist ? doctor.DoctorSpecialist.image.split("--")[0] : "01.jpg" %>" class="img-fluid" alt="Speciality"><%= doctor.DoctorSpecialist ? doctor.DoctorSpecialist.name : "not Edit Before" %></p>
 										<div class="rating">
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star"></i>
-											<span class="d-inline-block average-rating">(35)</span>
+											<i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 1 ? "active" :  "" %>"></i>
+											<i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 2 ? "active" :  "" %>"></i>
+											<i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 3 ? "active" :  "" %>"></i>
+											<i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 4 ? "active" :  "" %>"></i>
+											<i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 5 ? "active" :  "" %>"></i>
+											<span class="d-inline-block average-rating">(<%= doctor.userRate.length %>)</span>
 										</div>
 										<div class="clinic-details">
 											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <%= doctor.Addres %> - <a href="javascript:void(0);">Get Directions</a></p>
 										</div>
+
 									</div>
 								</div>
 								<div class="doc-info-right">
@@ -85,7 +103,9 @@
 										</a>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" href="booking.html">Appointment</a>
+										<% if (user && (userWithDocotr.userDoctorData && (userWithDocotr.userDoctorData.id != doctor.id))) { %>
+											<a class="apt-btn" href="/bookingDoctor/<%= doctor.id%>">Appointment</a>
+										<% } %>
 									</div>
 								</div>
 							</div>
@@ -273,7 +293,7 @@
 														<div class="comment-body">
 															<div class="meta-data">
 																<span class="comment-author"><%= element.commentUser.fName + " " + element.commentUser.lName %></span>
-																<span class="comment-date"><%= FormData(element.createAt , "time") %></span>
+																<span class="comment-date"><%= FormData(element.createAt) %></span>
 																<div class="review-count rating">
 																	<i class="fas fa-star <%= element.Rate >= 1 ? 'active' : '' %> "></i>
 																	<i class="fas fa-star <%= element.Rate >= 2 ? 'active' : '' %> "></i>
@@ -285,16 +305,9 @@
 															<p class="comment-content">
 																<%= element.comment %>
 															</p>
-															<div class="comment-reply">
-																<p class="recommend-btn">
-																	<span>Recommend?</span>
-																	<a href="#" class="like-btn">
-																		<i class="far fa-thumbs-up"></i> Yes
-																	</a>
-																	<a href="#" class="dislike-btn">
-																		<i class="far fa-thumbs-down"></i> No
-																	</a>
-																</p>
+															<div class="enterAction" id="<%= element.id%>">
+																<span class="deslike <%= element.disLikeUser.includes(user.id) ? "active" : "" %>"><span><%= element.disLike %></span> <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i> </span>
+																<span class="like <%= element.likeUser.includes(user.id) ? "active" : "" %>"><span><%= element.like %></span> <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i></span>
 															</div>
 														</div>
 													</div>
@@ -302,7 +315,7 @@
 							
 											<% }) %>
 												<div class="all-feedback text-center">
-													<a href="#" class="btn btn-primary btn-sm">
+													<a href="/allDoctorComments/<%= doctor.id %>" class="btn btn-primary btn-sm">
 														Show all feedback
 													</a>
 												</div>	
@@ -508,16 +521,9 @@
 							<p class="comment-content">
 								
 							</p>
-							<div class="comment-reply">
-								<p class="recommend-btn">
-									<span>Recommend?</span>
-									<a href="#" class="like-btn">
-										<i class="far fa-thumbs-up"></i> Yes
-									</a>
-									<a href="#" class="dislike-btn">
-										<i class="far fa-thumbs-down"></i> No
-									</a>
-								</p>
+							<div class="enterAction">
+								<span class="deslike "><span>0</span><i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i></span>
+								<span class="like"><span>0</span><i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i></span>
 							</div>
 						</div>
 					</div>
@@ -560,15 +566,28 @@
 					url:"/addDoctorComment",
 					type : "post",
 					success(data) {
+						if(!data) {
+							document.querySelector(".alert2 > div").innerHTML = "you have already interacted"
+							document.querySelector(".alert2").classList.add("active")
+							setTimeout(() => {
+							document.querySelector(".alert2").classList.remove("active")
+							} , 3000)
+							comment.value = ""
+							rateIcon.forEach(element => {
+							element.className = "fa fa-star"
+						})
+						return
+						}
 						var testComment = document.querySelector(".comment_test").cloneNode(true)
 						testComment.classList.remove("d-none")
+						testComment.querySelector(".enterAction").setAttribute("id" , data.id)
+						console.log(data)
 						testComment.querySelector(".comment .comment-content").innerHTML = comment.value
 						comment.value = ""
 						testComment.querySelector(".avatar").setAttribute("src" , `/backEnd/assets/img/patients/${data.commentUser.image.split("--")[0]}`)
 						testComment.querySelector(".comment-author").innerHTML = `${data.commentUser.fName + " " + data.commentUser.lName}`
 						testComment.querySelectorAll(".review-count .fas").forEach((ele , i) => {
 							if(count > i) {
-								console.log(count + " " + i)
 								ele.classList.add("active")
 							}
 						})
@@ -585,6 +604,7 @@
 						setTimeout(() => {
 						document.querySelector(".alert2").classList.remove("active")
 						} , 3000)
+						enterActionFunc()
 					},
 					error() {
 						document.querySelector(".alert2 > div").innerHTML = "thir is error"
@@ -607,6 +627,57 @@
 					})
 				}
 			})
+
+
+
+
+
+
+
+
+
+    function enterActionFunc() {
+        var enterAction = document.querySelectorAll(".enterAction > span")
+        enterAction.forEach(ele => {
+        ele.onclick = function() {
+            var child = this.querySelector("span").innerHTML
+            if(this.classList.contains("active")) {
+                this.classList.remove("active")
+                this.querySelector("span").innerHTML = parseInt(child) - 1
+            } else {
+                this.classList.add("active")
+                this.querySelector("span").innerHTML = parseInt(child) + 1 
+                if(this.classList.contains("deslike")) {
+                    if(this.nextElementSibling.firstElementChild.innerHTML > 0 && this.nextElementSibling.classList.contains("active")) this.nextElementSibling.firstElementChild.innerHTML = parseInt(this.nextElementSibling.firstElementChild.innerHTML) - 1
+                    this.nextElementSibling.classList.remove("active")
+                }  else {
+                    if(this.parentElement.firstElementChild.firstElementChild.innerHTML > 0 && this.parentElement.firstElementChild.classList.contains("active")) this.parentElement.firstElementChild.firstElementChild.innerHTML = parseInt(this.parentElement.firstElementChild.firstElementChild.innerHTML) - 1
+                    this.parentElement.firstElementChild.classList.remove("active")                     
+                }
+            }  
+            var likes = this.parentElement.lastElementChild.firstElementChild.innerHTML
+            var desLike = this.parentElement.firstElementChild.firstElementChild.innerHTML
+            var commentId = this.parentElement.getAttribute("id")
+            $.ajax({
+                data : {
+                    commentId : parseInt(commentId),
+                    userId : parseInt("<%= user ? user.id : 0 %>"),
+                    likes : parseInt(likes),
+                    desLikes : parseInt(desLike)
+                },
+                type : "post",
+                url : "/addProductInterActionAjax",
+                success(data) {
+                    console.log(data)
+                },
+                error() {
+                    console.log("error")
+                }
+            })
+        }
+    })
+    }
+    enterActionFunc()
 
 		</script>
     </body>

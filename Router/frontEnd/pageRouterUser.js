@@ -3,13 +3,9 @@ const {
   All_Doctors,
   doctorProfile,
   addDoctorComment,
-  MainPageController,
-  catigoryShow_controller,
-  productDetails_controller,
-  getProductAllComments,
+
   getDataSearch_ajax,
   getSearchUserData,
-  getAllProduct,
   getMyAccount,
   editPersonalInformationGet,
   editPersonalInformationPost,
@@ -38,6 +34,17 @@ const {
   sendMessage,
   removeIsSeenFromChate,
   addIsSeenFromChate,
+  bookingDoctor,
+  bookingDoctor_post,
+  getSearchDoctorData,
+  addProductInterActionAjax,
+  allDoctorComments,
+  allPharmacy,
+  allLabs,
+  mackOrderController,
+  mackOrderControllerPost,
+  showPharmacy,
+  showLab,
 } = require("../../controllers/frontEnd/pageControllerUser");
 const { uploade_img_multi_fild, uploade_img } = require("../../Helper/helper");
 const {
@@ -46,21 +53,40 @@ const {
 const {
   editPersonalData_validation,
 } = require("../../validation/frontEnd/editPersonalData_validation");
+const {
+  pharmacyOrderValidate,
+} = require("../../validation/frontEnd/pharmacyOrder.validate");
 
 const Router = require("express").Router();
 
 Router.get("/home", homePage);
 Router.get("/All_Doctors", All_Doctors);
+Router.post("/getSearchDoctorData", getSearchDoctorData);
 Router.get("/doctorProfile/:id", doctorProfile);
-Router.post("/addDoctorComment", addDoctorComment);
+Router.get("/bookingDoctor/:id", userAuthonticat, bookingDoctor);
+Router.post("/bookingDoctor/:id", userAuthonticat, bookingDoctor_post);
+Router.post("/addDoctorComment", userAuthonticat, addDoctorComment);
+Router.get("/allDoctorComments/:id", allDoctorComments);
+Router.get("/allPharmacy", allPharmacy);
+Router.get("/PharmacyData/:id", showPharmacy);
+Router.get("/showLab/:id", showLab);
+Router.get("/allLabs", allLabs);
+Router.get("/mackOrder/:id", mackOrderController);
+Router.post(
+  "/mackOrder/:id",
+  userAuthonticat,
+  uploade_img("public/backEnd/assets/img/pharmacyOrderImage", "image"),
+  pharmacyOrderValidate(),
+  mackOrderControllerPost
+);
+Router.post(
+  "/addProductInterActionAjax",
+  userAuthonticat,
+  addProductInterActionAjax
+);
 
-Router.get("/home", MainPageController);
-Router.get("/catigoryDetails/:id", catigoryShow_controller);
-Router.get("/productDetails/:id", productDetails_controller);
-Router.get("/ProductAllComments/:id", getProductAllComments);
 Router.post("/getSearchData", getDataSearch_ajax);
 Router.post("/getSearchUserData", getSearchUserData);
-Router.get("/AllProduct", getAllProduct);
 Router.get("/userProfile/:id", userAuthonticat, getMyAccount);
 Router.get("/news", userAuthonticat, getMyAccount);
 Router.get(
@@ -72,7 +98,7 @@ Router.post(
   "/editPersonalInformation",
   userAuthonticat,
   uploade_img("public/admin/asset/images/users_photo", "image"),
-  editPersonalData_validation,
+  editPersonalData_validation(),
   editPersonalInformationPost
 );
 Router.get("/membersPosts", userAuthonticat, membersPosts);
@@ -90,7 +116,7 @@ Router.post(
         name: "video",
       },
     ],
-    "public/admin/asset/images/posts"
+    "public/backEnd/assets/img/posts_image"
   ),
   addPostAjax
 );
@@ -107,7 +133,7 @@ Router.post(
         name: "video",
       },
     ],
-    "public/admin/asset/images/posts"
+    "public/backEnd/assets/img/posts_image"
   ),
   editPostAjax
 );
@@ -115,14 +141,14 @@ Router.post("/AddLikes", userAuthonticat, AddLikesAjax);
 Router.post(
   "/addCommentOnPosts",
   userAuthonticat,
-  uploade_img("public/admin/asset/images/commentsPhoto", "image"),
+  uploade_img("public/backEnd/assets/img/comment_photo", "image"),
   addCommentOnPosts
 );
 Router.post("/deleteCommentAjax", userAuthonticat, deleteCommentAjax);
 Router.post(
   "/editCommentAjax",
   userAuthonticat,
-  uploade_img("public/admin/asset/images/commentsPhoto", "image"),
+  uploade_img("public/backEnd/assets/img/comment_photo", "image"),
   editCommentAjax
 );
 Router.post("/getCommentData", userAuthonticat, getCommentData);
@@ -140,10 +166,7 @@ Router.post("/getUserNotification", userAuthonticat, getUserNotification);
 Router.post(
   "/changeCoverImage",
   userAuthonticat,
-  uploade_img(
-    "public/admin/asset/images/users_photo/cover_image",
-    "imageCover"
-  ),
+  uploade_img("public/backEnd/assets/img/cover_image", "imageCover"),
   changeCoverImage
 );
 Router.post("/getFrindMessages", userAuthonticat, getFrindMessages);

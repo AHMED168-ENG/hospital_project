@@ -1,0 +1,126 @@
+<%- include("../include/head")  %> 
+<link rel="stylesheet" href="/frontEnd/assets/css/style.css">
+    <link
+      rel="stylesheet"
+      href="/frontEnd/assets/plugins/select2/css/select2.min.css"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="/frontEnd/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="/frontEnd/assets/plugins/dropzone/dropzone.min.css"
+    />
+    <!-- Main CSS -->
+	<style>
+		body {
+			background-color: #f8f9fa;
+		}
+	</style>
+<%- include("../include/alert")  %> 
+</head>
+    </body>
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <%- include("../include/naveBare.ejs")  %> 
+            <!-- Page Wrapper -->
+            <div class="container">
+                <div class="page-wrapper">
+                <div class="content container-fluid">
+                    <div class="row">
+			            <div class="col-md-12">
+							<form method="post" enctype="multipart/form-data">
+								<!-- Basic Information -->
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title">Basic Information ==> <a style="text-decoration: underline;" href="/allPharmacy">AllPharmacy</a></h4>
+										<div class="row form-row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>name <span class="text-danger">*</span></label>
+													<input name="name" disabled value="<%= Pharmacy.name %>" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.name) { %>
+															<span class="text-danger"><%=validationError.name[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>phone <span class="text-danger">*</span></label>
+													<input disabled value="<%= Pharmacy.phone %>" name="phone" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.phone) { %>
+															<span class="text-danger"><%=validationError.phone[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+									
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>province <span class="text-danger">*</span></label>
+													<input disabled value="<%= Pharmacy.province %>" name="province" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.province) { %>
+															<span class="text-danger"><%=validationError.province[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>village <span class="text-danger">*</span></label>
+													<input disabled value="<%= Pharmacy.village %>" name="village" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.village) { %>
+															<span class="text-danger"><%=validationError.village[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Pharmacy image <span class="text-danger">*</span></label>
+													<img style="height:250px" src="/backEnd/assets/img/pharmacyImage/<%= Pharmacy.image ? Pharmacy.image.split("--")[0] : "avatar.png"  %>" name="province" type="text" class="form-control">  
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Basic Information -->
+							</form>
+						</div>
+                    </div>
+                </div>			
+            </div>
+            </div>
+            <!-- /Page Wrapper -->
+
+        </div>
+        <%- include("../include/footer.ejs")  %> 
+        <%- include("../include/footer_script")  %> 
+        		
+        
+		<script src="/backEnd/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="/backEnd/assets/plugins/datatables/datatables.min.js"></script>
+
+        <script src="/frontEnd/assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+        <script src="/frontEnd/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+		
+		<script src="/frontEnd/assets/plugins/select2/js/select2.min.js"></script>
+		
+		<script src="/frontEnd/assets/plugins/dropzone/dropzone.min.js"></script>
+		<script src="/frontEnd/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js"></script>	
+		<script src="/frontEnd/assets/js/profile-settings.js"></script>
+        <script src="/backEnd/assets/js/script.js"></script>
+
+    </head>
+</body>

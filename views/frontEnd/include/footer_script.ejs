@@ -1,9 +1,18 @@
+<!-- jQuery -->
+<script src="/frontEnd/assets/js/jquery.min.js"></script>
 
-
-		<!-- jQuery -->
-		<script src="/frontEnd/assets/js/jquery.min.js"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="/frontEnd/assets/js/popper.min.js"></script>
-		<script src="/frontEnd/assets/js/bootstrap.min.js"></script>
-
+<!-- Bootstrap Core JS -->
+<script src="/frontEnd/assets/js/popper.min.js"></script>
+<script src="/frontEnd/assets/js/bootstrap.min.js"></script>
+<script>
+  window.onload = function () {
+    var alertNotification = document.querySelector(".alertNotification");
+    if (alertNotification) {
+      alertNotification.classList.add("active");
+      setTimeout(() => {
+        alertNotification.classList.remove("active");
+      }, 4000);
+    }
+  };
+</script>
+<script src="/socket.io/socket.io.js"></script>

@@ -2,6 +2,27 @@
 	.rating i.active {
 		color:rgb(224, 210, 5)
 	}
+	.paginate ul {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.paginate ul li a {
+		width:35px;
+		height:35px;
+		border:1px solid #ddd;
+		border-radius: 5px;
+		background-color: #eee;
+		display: flex;
+		margin:0 5px;
+		align-items: center;
+		justify-content: center;
+		font-size:17px;
+	}
+	.paginate ul li a.active {
+		background:#0DE0FE;
+		color:white
+	}
 </style>
 <%- include("../include/head.ejs")  %> 
 <body>
@@ -56,7 +77,9 @@
 								<div class="card-body">
 								<div class="filter-widget">
 									<div class="cal-icon">
-										<input type="text" class="form-control datetimepicker" placeholder="Select Date">
+										<input type="text" name="DoctorName" value="<%= Qyery.DoctorName %>" class="form-control datetimepicker DoctorName" placeholder="Select Doctor">
+										<small style="margin-bottom:10px">search with first name</small>
+										<input type="text" name="CountryName" value="<%= Qyery.CountryName %>" class="form-control datetimepicker CountryName" placeholder="Select Addres">
 									</div>			
 								</div>
 								<div class="filter-widget">
@@ -94,21 +117,24 @@
 							
 						</div>
 						
+						<%- include("../include/notification.ejs")  %> 
+
 						<div class="col-md-12 col-lg-8 col-xl-9">
-							<% if (doctors.length > 0) { %>
-							<% doctors.forEach(element => { %>
-                             							<!-- Doctor Widget -->
+							<% if (doctors.rows.length > 0) { %>
+							<% doctors.rows.forEach(element => { %>
+                            <!-- Doctor Widget -->
+
 							<div class="card">
 								<div class="card-body">
 									<div class="doctor-widget">
 										<div class="doc-info-left">
 											<div class="doctor-img">
-												<a href="doctor-profile.html">
+												<a href="/doctorProfile/<%= element.id%>">
 													<img src="/backEnd/assets/img/doctors/<%= element.doctorImage ? element.doctorImage.split("--")[0] : "avatar.png" %>" class="img-fluid" alt="User Image">
 												</a>
 											</div>
 											<div class="doc-info-cont">
-												<h4 class="doc-name"><a href="doctor-profile.html"><%= element.fName + " " + element.lName %></a></h4>
+												<h4 class="doc-name"><a href="/doctorProfile/<%= element.id%>"><%= element.fName + " " + element.lName %></a></h4>
 												<p class="doc-speciality"><%= element.service ? element.service : "not edit yet" %></p>
 												<h5 class="doc-department"><img src="/backEnd/assets/img/specialities/<%= element.DoctorSpecialist ? element.DoctorSpecialist.image.split("--")[0] : "01.jpg" %>" class="img-fluid" alt="Speciality"><%= element.DoctorSpecialist ? element.DoctorSpecialist.name : "not Edit Before" %></h5>
 												<div class="rating">
@@ -131,12 +157,20 @@
 												<ul>
 													<li><i class="far fa-thumbs-up"></i> <%= Math.ceil((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) %>%</li>
 													<li><i class="far fa-comment"></i> <%= element.userRate.length %> Feedback</li>
-													<li><i class="fas fa-map-marker-alt"></i> Florida, USA</li>
+													<li><i class="fas fa-map-marker-alt"></i> <%= element.Addres ? element.Addres : "ther is no addres" %></li>
 												</ul>
 											</div>
 											<div class="clinic-booking">
 												<a class="view-pro-btn" href="/doctorProfile/<%= element.id%>">View Profile</a>
-												<a class="apt-btn" href="booking.html"> Appointment</a>
+												<% if (user) { %>
+													<% if (userWithDocotr.userDoctorData) { %>
+														<% if (userWithDocotr.userDoctorData.id != element.id) { %>
+														 	<a class="apt-btn" href="/bookingDoctor/<%= element.id%>"> Appointment</a>
+														<% } %>
+													<% } else { %>
+												 		<a class="apt-btn" href="/bookingDoctor/<%= element.id%>"> Appointment</a>
+													<% } %>
+												<% } %>
 											</div>
 										</div>
 									</div>
@@ -145,20 +179,20 @@
 							
 							<!-- /Doctor Widget -->
                             <% }) %>
-							<div class="load-more text-center">
-								<a class="btn btn-primary btn-sm" href="javascript:void(0);">Load More</a>	
+							<div class="paginate">
+								<ul class="list-unstyled">
+									<% pages.forEach(element => { %>
+										<li><a class="<%= page == element.number ? "active" : "" %>" href="<%= element.url %>"><%= element.number %></a></li>
+									<% }) %>
+								</ul>
 							</div>	
 							<% } else { %>	
 								<div class="alert alert-danger">no data to show</div>
 							<% } %>
 
-
-
 						</div>
 					</div>
-
 				</div>
-
 			</div>		
 			<!-- /Page Content -->
 		</div>
@@ -177,7 +211,7 @@
 						Qyery += ele.getAttribute("name") + "=" + ele.getAttribute("data_type") + "&"
 					}
 				})
-				window.location.href = window.location.pathname + Qyery + (selectType.value ? `filter=${selectType.value}` : "")
+				window.location.href = window.location.pathname + Qyery + (selectType.value ? `filter=${selectType.value}` : "") + "&" + "DoctorName="+document.querySelector(".DoctorName").value+"&CountryName=" + document.querySelector(".CountryName").value
 			}
 
 			function filter(e) {

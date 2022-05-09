@@ -1,0 +1,361 @@
+<style>
+li.comment_test .comment i.active {
+	color:rgb(216, 195, 11)
+}
+.addRate i.active , .review-count i.active {
+	color:rgb(216, 195, 11)
+}
+.rating i.active {
+	color:rgb(224, 210, 5)
+}
+.enterAction {
+	display: flex;
+	align-items: center;
+}
+.review-listing > ul li .comment:last-child {
+    padding:10px;
+    background:#EEe;
+    border:1px solid #ddd
+}
+.enterAction > span {
+	padding:7px;
+	background:#eee;
+	margin:0 4px;
+	cursor: pointer;
+	border:1px solid #DDD;
+	opacity: 0.5;
+}
+	.paginate ul {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.paginate ul li a {
+		width:35px;
+		height:35px;
+		border:1px solid #ddd;
+		border-radius: 5px;
+		background-color: #eee;
+		display: flex;
+		margin:0 5px;
+		align-items: center;
+		justify-content: center;
+		font-size:17px;
+	}
+	.paginate ul li a.active {
+		background:#0DE0FE;
+		color:white
+	}
+.enterAction > span.active {
+	opacity: 1;
+}
+</style>
+<%- include("../include/head.ejs")  %> 
+<%- include("../include/alert")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+            <%- include("../include/naveBare.ejs")  %> 
+		<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="/doctorProfile/<%= doctor.id %>">Doctor Profile</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Doctor Comment</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Doctor Comment</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+
+
+		<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+                    <% if (user) { %>
+                        <!-- Write Review -->
+                    <div class="write-review">
+                        <h4>Write a review for <strong><%= doctor.fName + " " + doctor.lName %></strong></h4>
+                        
+                        <!-- Write Review Form -->
+                        <form>
+                            <div class="form-group">
+                                <label>Review</label>
+                                <div class="addRate">
+                                    <i class="fa fa-star" data_number="1"></i>
+                                    <i class="fa fa-star" data_number="2"></i>
+                                    <i class="fa fa-star" data_number="3"></i>
+                                    <i class="fa fa-star" data_number="4"></i>
+                                    <i class="fa fa-star" data_number="5"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Your review</label>
+                                <textarea id="review_desc" maxlength="100" class="commentText form-control"></textarea>
+                                
+                                <div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
+                            </div>
+                            <hr>
+
+                            <div class="submit-section">
+                                <button type="button" class="btn addComment btn-block btn-primary btn-sm">Add Review</button>
+                            </div>
+                        </form>
+                        <!-- /Write Review Form -->
+                        
+                    </div>
+                    <!-- /Write Review -->
+                    <% } else { %>
+                        <div class="alert alert-danger">if you wont to add comment sign in after</div>
+                        <a href="/pationt/signIn" class="btn btn-block btn-success">Sign In</a>
+                    <% } %>
+                    <!-- Reviews Content -->
+                    <hr>
+                    <div>
+                        <!-- Review Listing -->
+                        <div class="widget review-listing">
+                            <ul class="comments-list">
+                                <% if (doctorComments.rows.length > 0) { %>
+                                <% doctorComments.rows.forEach(element => { %>
+                                    <li>
+                                        <div class="comment">
+                                            <img class="avatar avatar-sm rounded-circle" alt="User Image" src="/backEnd/assets/img/patients/<%= element.commentUser.image.split("--")[0] %>">
+                                            <div class="comment-body">
+                                                <div class="meta-data">
+                                                    <span class="comment-author"><%= element.commentUser.fName + " " + element.commentUser.lName %></span>
+                                                    <span class="comment-date"><%= formateDate(element.createAt) %></span>
+                                                    <div class="review-count rating">
+                                                        <i class="fas fa-star <%= element.Rate >= 1 ? 'active' : '' %> "></i>
+                                                        <i class="fas fa-star <%= element.Rate >= 2 ? 'active' : '' %> "></i>
+                                                        <i class="fas fa-star <%= element.Rate >= 3 ? 'active' : '' %> "></i>
+                                                        <i class="fas fa-star <%= element.Rate >= 4 ? 'active' : '' %> "></i>
+                                                        <i class="fas fa-star <%= element.Rate >= 5 ? 'active' : '' %> "></i>
+                                                    </div>
+                                                </div>
+                                                <p class="comment-content">
+                                                    <%= element.comment %>
+                                                </p>
+                                                <div class="enterAction" id="<%= element.id%>">
+                                                    <span class="deslike <%= element.disLikeUser.includes(user.id) ? "active" : "" %>"><span><%= element.disLike %></span> <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i> </span>
+                                                    <span class="like <%= element.likeUser.includes(user.id) ? "active" : "" %>"><span><%= element.like %></span> <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                
+                                <% }) %>
+                                <% } else { %>
+                                    <div class="alert alert-danger">ther is now comments on this doctor</div>
+                                <% } %>
+                            </ul>
+                            
+                            <!-- Show All -->
+
+                            <!-- /Show All -->
+                            
+                        </div>
+                        <!-- /Review Listing -->
+                    </div>
+                    <!-- /Reviews Content -->
+				</div>
+			</div>		
+			<!-- /Page Content -->
+		</div>
+		<!-- /Main Wrapper -->
+
+
+				<!-- Comment List -->
+				<li class="d-none comment_test">
+					<div class="comment">
+						<img class="avatar avatar-sm rounded-circle" alt="User Image" src="">
+						<div class="comment-body">
+							<div class="meta-data">
+								<span class="comment-author"></span>
+								<span class="comment-date">now</span>
+								<div class="review-count rating">
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+								</div>
+							</div>
+							<p class="comment-content">
+								
+							</p>
+							<div class="enterAction">
+								<span class="deslike "><span>0</span><i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i></span>
+								<span class="like"><span>0</span><i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i></span>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!-- /Comment List -->
+                    <div class="paginate">
+                        <ul class="list-unstyled">
+                            <% pages.forEach(element => { %>
+                                <li><a class="<%= page == element.number ? "active" : "" %>" href="<%= element.url %>"><%= element.number %></a></li>
+                            <% }) %>
+                        </ul>
+                    </div>
+        <%- include("../include/footer.ejs")  %> 
+        <%- include("../include/footer_script.ejs")  %> 
+		
+		<script src="/frontEnd/assets/js/slick.js"></script>
+		<!-- Custom JS -->
+		<script src="/frontEnd/assets/js/script.js"></script>
+		<script>
+      		var alert2 = document.querySelector(".alert2");
+			var addComment = document.querySelector(".addComment")
+			var comments_list = document.querySelector(".comments-list")
+			var rateIcon = document.querySelectorAll(".addRate i")
+			addComment.onclick = function(e) {
+				var count = 0;
+				var comment = document.querySelector(".commentText") 
+				if(comment.value == "" || comment.value.length > 100) {
+					document.querySelector(".alert2 > div").innerHTML = "comment shouldnt be null or more than 100 charcter"
+					document.querySelector(".alert2").classList.add("active")
+					setTimeout(() => {
+					document.querySelector(".alert2").classList.remove("active")
+					} , 3000)
+					return
+				}
+				rateIcon.forEach(ele => {
+					if(ele.classList.contains("active")) {
+						count++
+					}
+				})
+				$.ajax({
+					data : {
+						userId : '<%= user ? user.id : "" %>',
+						doctorId : '<%= doctor.id %>',
+						comment : comment.value,
+						rate : count
+					},
+					url:"/addDoctorComment",
+					type : "post",
+					success(data) {
+						if(!data) {
+							document.querySelector(".alert2 > div").innerHTML = "you have already interacted"
+							document.querySelector(".alert2").classList.add("active")
+							setTimeout(() => {
+							document.querySelector(".alert2").classList.remove("active")
+							} , 3000)
+							comment.value = ""
+							rateIcon.forEach(element => {
+							element.className = "fa fa-star"
+						})
+						return
+						}
+						var testComment = document.querySelector(".comment_test").cloneNode(true)
+						testComment.classList.remove("d-none")
+						testComment.querySelector(".enterAction").setAttribute("id" , data.id)
+						console.log(data)
+						testComment.querySelector(".comment .comment-content").innerHTML = comment.value
+						comment.value = ""
+						testComment.querySelector(".avatar").setAttribute("src" , `/backEnd/assets/img/patients/${data.commentUser.image.split("--")[0]}`)
+						testComment.querySelector(".comment-author").innerHTML = `${data.commentUser.fName + " " + data.commentUser.lName}`
+						testComment.querySelectorAll(".review-count .fas").forEach((ele , i) => {
+							if(count > i) {
+								ele.classList.add("active")
+							}
+						})
+						if(comments_list.querySelector(".alert")) {
+							comments_list.querySelector(".alert").remove()
+						}
+						comments_list.insertBefore(testComment , comments_list.firstElementChild)
+						rateIcon.forEach(element => {
+							element.className = "fa fa-star"
+						})
+
+						document.querySelector(".alert2 > div").innerHTML = "comment add successful"
+						document.querySelector(".alert2").classList.add("active")
+						setTimeout(() => {
+						document.querySelector(".alert2").classList.remove("active")
+						} , 3000)
+						enterActionFunc()
+					},
+					error() {
+						document.querySelector(".alert2 > div").innerHTML = "thir is error"
+						document.querySelector(".alert2").classList.add("active")
+						setTimeout(() => {
+						document.querySelector(".alert2").classList.remove("active")
+						} , 3000)
+					}
+				})
+			}
+
+			rateIcon.forEach(element => {
+				element.onmousemove = function() {
+					rateIcon.forEach((ele , i) => {
+						if(i < element.getAttribute("data_number")) {
+							ele.className = "fa fa-star active"
+						} else {
+							ele.className = "fa fa-star "
+						}
+					})
+				}
+			})
+
+
+
+
+
+
+
+
+
+    function enterActionFunc() {
+        var enterAction = document.querySelectorAll(".enterAction > span")
+        enterAction.forEach(ele => {
+        ele.onclick = function() {
+            var child = this.querySelector("span").innerHTML
+            if(this.classList.contains("active")) {
+                this.classList.remove("active")
+                this.querySelector("span").innerHTML = parseInt(child) - 1
+            } else {
+                this.classList.add("active")
+                this.querySelector("span").innerHTML = parseInt(child) + 1 
+                if(this.classList.contains("deslike")) {
+                    if(this.nextElementSibling.firstElementChild.innerHTML > 0 && this.nextElementSibling.classList.contains("active")) this.nextElementSibling.firstElementChild.innerHTML = parseInt(this.nextElementSibling.firstElementChild.innerHTML) - 1
+                    this.nextElementSibling.classList.remove("active")
+                }  else {
+                    if(this.parentElement.firstElementChild.firstElementChild.innerHTML > 0 && this.parentElement.firstElementChild.classList.contains("active")) this.parentElement.firstElementChild.firstElementChild.innerHTML = parseInt(this.parentElement.firstElementChild.firstElementChild.innerHTML) - 1
+                    this.parentElement.firstElementChild.classList.remove("active")                     
+                }
+            }  
+            var likes = this.parentElement.lastElementChild.firstElementChild.innerHTML
+            var desLike = this.parentElement.firstElementChild.firstElementChild.innerHTML
+            var commentId = this.parentElement.getAttribute("id")
+            $.ajax({
+                data : {
+                    commentId : parseInt(commentId),
+                    userId : parseInt("<%= user ? user.id : 0 %>"),
+                    likes : parseInt(likes),
+                    desLikes : parseInt(desLike)
+                },
+                type : "post",
+                url : "/addProductInterActionAjax",
+                success(data) {
+                    console.log(data)
+                },
+                error() {
+                    console.log("error")
+                }
+            })
+        }
+    })
+    }
+    enterActionFunc()
+
+		</script>
+    </body>
+</head>

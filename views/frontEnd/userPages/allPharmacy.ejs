@@ -1,0 +1,170 @@
+<style>
+	.rating i.active {
+		color:rgb(224, 210, 5)
+	}
+	.paginate ul {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.paginate ul li a {
+		width:35px;
+		height:35px;
+		border:1px solid #ddd;
+		border-radius: 5px;
+		background-color: #eee;
+		display: flex;
+		margin:0 5px;
+		align-items: center;
+		justify-content: center;
+		font-size:17px;
+	}
+	.paginate ul li a.active {
+		background:#0DE0FE;
+		color:white
+	}
+</style>
+<%- include("../include/head.ejs")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+			<%- include("../include/naveBare.ejs")  %> 
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-8 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="/home">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Search</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">All Pharmacy : (<%= allPharmacy.length %>)</h2>
+						</div>
+		
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb --> 
+
+
+            <!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							<!-- Search Filter -->
+							<div class="card search-filter">
+								<div class="card-header">
+									<h4 class="card-title mb-0">Search Filter</h4>
+								</div>
+								<div class="card-body">
+								<div class="filter-widget">
+									<div class="cal-icon">
+										<input type="text" name="province" value="<%= Qyery.province %>" class="form-control datetimepicker province" placeholder="Select province">
+										<small style="margin-bottom:10px">search with first name</small>
+										<input type="text" name="village" value="<%= Qyery.village %>" class="form-control datetimepicker village" placeholder="Select village">
+									</div>			
+								</div>
+							
+								
+									<div class="btn-search">
+										<button type="button" class="btn btn-block">Search</button>
+									</div>	
+								</div>
+							</div>
+							<!-- /Search Filter -->
+							
+						</div>
+						
+						<%- include("../include/notification.ejs")  %> 
+
+						<div class="col-md-12 col-lg-8 col-xl-9">
+							<% if (allPharmacy.length > 0) { %>
+							<% allPharmacy.forEach(element => { %>
+                            <!-- Doctor Widget -->
+
+							<div class="card">
+								<div class="card-body">
+									<div class="doctor-widget">
+										<div class="doc-info-left">
+											<div class="doctor-img">
+												<a href="/PharmacyData/<%= element.id%>">
+													<img src="/backEnd/assets/img/pharmacyImage/<%= element.image ? element.image.split("--")[0] : "avatar.png" %>" class="img-fluid" alt="User Image">
+												</a>
+											</div>
+											<div class="doc-info-cont">
+												<h4 class="doc-name"><a href="/PharmacyData/<%= element.id%>"><%= element.name %></a></h4>
+												<p class="doc-speciality"><%= element.phone %></p>
+												<div class="clinic-details">
+													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> province : <%= element.province %> <br> <i class="fas fa-map-marker-alt"></i> village : <%= element.village %></p>
+												</div>
+
+											</div>
+										</div>
+										<div class="doc-info-right">
+										
+											<div class="clinic-booking">
+												<a class="view-pro-btn" href="/mackOrder/<%= element.id%>">Mack Order</a>
+												<a class="view-pro-btn" href="/PharmacyData/<%= element.id%>">Show Data</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- /Doctor Widget -->
+                            <% }) %>
+							<div class="paginate">
+								<ul class="list-unstyled">
+									<% pages.forEach(element => { %>
+										<li><a class="<%= page == element.number ? "active" : "" %>" href="<%= element.url %>"><%= element.number %></a></li>
+									<% }) %>
+								</ul>
+							</div>	
+							<% } else { %>	
+								<div class="alert alert-danger">no data to show</div>
+							<% } %>
+
+						</div>
+					</div>
+				</div>
+			</div>		
+			<!-- /Page Content -->
+		</div>
+		<!-- /Main Wrapper -->
+        <%- include("../include/footer.ejs")  %> 
+        <%- include("../include/footer_script.ejs")  %> 
+		<!-- Custom JS -->
+		<script src="/frontEnd/assets/js/script.js"></script>
+		<script>
+			document.querySelector(".btn-search").onclick = function () {
+				var Qyery = "?"
+				var filter = document.querySelectorAll(".filter")
+				filter.forEach(ele => {
+					if(ele.checked) {
+						Qyery += ele.getAttribute("name") + "=" + ele.getAttribute("data_type") + "&"
+					}
+				})
+				window.location.href = window.location.pathname + Qyery + "&" + "province="+document.querySelector(".province").value+"&village=" + document.querySelector(".village").value
+			}
+
+			function filter(e) {
+				var query = "?"
+				var filter = document.querySelectorAll(".filter")
+				filter.forEach(ele => {
+					if(ele.checked) {
+						query += ele.getAttribute("name") + "=" + ele.getAttribute("data_type") + "&"
+					}
+				})
+
+				window.location.href = window.location.pathname + query + `filter=${e.target.value}`
+
+			}
+		</script>
+    </body>
+</head>

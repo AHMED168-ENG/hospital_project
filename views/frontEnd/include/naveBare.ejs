@@ -1,7 +1,7 @@
 <!-- Header -->
 <header class="header">
   <nav class="navbar navbar-expand-lg header-nav">
-    <div class="navbar-header"style=" height:100%">
+    <div class="navbar-header" style="height: 100%">
       <a id="mobile_btn" href="javascript:void(0);">
         <span class="bar-icon">
           <span></span>
@@ -9,11 +9,16 @@
           <span></span>
         </span>
       </a>
-      <a href="/home" style="height:100%" class="navbar-brand logo">
-        <img style="height:100%" src="/backEnd/assets/img/logo5.png" class="img-fluid" alt="Logo" />
+      <a href="/home" style="height: 100%" class="navbar-brand logo">
+        <img
+          style="height: 100%"
+          src="/backEnd/assets/img/logo5.png"
+          class="img-fluid"
+          alt="Logo"
+        />
       </a>
     </div>
-    <div class="main-menu-wrapper">
+    <div class="main-menu-wrapper" style="flex-grow: 1">
       <div class="menu-header">
         <a href="index.html" class="menu-logo">
           <img
@@ -26,11 +31,14 @@
           <i class="fas fa-times"></i>
         </a>
       </div>
-      <ul class="list-unstyled text-center" style="margin:0">
+      <ul class="list-unstyled text-center" style="margin: 0">
         <li class="has-submenu">
-          <a href="/All_Doctors">All Doctors </a>
+          <a
+            href="/All_Doctors"
+            style="padding: 5px 10px; background: #ddd; border-radius: 4px"
+            >All Doctors
+          </a>
         </li>
-
       </ul>
     </div>
     <ul class="nav header-navbar-rht">
@@ -45,17 +53,21 @@
       </li>
 
       <% if (!user) { %>
-          <li class="nav-item">
-            <a class="nav-link header-login" href="/pationt/signIn"
-              >login / Signup
-            </a>
-          </li>
-      <% } else if(user) { %>
-        <% if (!doctor) { %>
-        <li>
-          <a class="btn btn-outline-secondary" style="border:1px solid #ddd" href="/doctor/signIn">Sign In Doctor</a>
-        </li>
-        <% } %>
+      <li class="nav-item">
+        <a class="nav-link header-login" href="/pationt/signIn"
+          >login / Signup
+        </a>
+      </li>
+      <% } else if(user) { %> <% if (!doctor) { %>
+      <li>
+        <a
+          class="btn btn-outline-secondary"
+          style="border: 1px solid #ddd"
+          href="/doctor/signIn"
+          >Sign In Doctor</a
+        >
+      </li>
+      <% } %>
       <div class="dropdown">
         <button
           class="btn btn-secondary dropdown-toggle"
@@ -74,21 +86,19 @@
           style="right: 0 !important; left: auto !important"
         >
           <p class="dropdown-item user-aria">
-            <% if (user.image) { %>
-            <a href="/pationt/pationt_dashpored"
-              ><img class="float-left" src="/backEnd/assets/img/patients/<%=
-              user.image.split("--")[0] %>" width="49" height="49" /></a
-            >
-            <% } else { %>
-            <a href="/backEnd/assets/img/patients/<%=
-              user.image.split("--")[0] %>"
-              ><img
+            <a href="/userProfile/<%= user.id %>">
+              <% if (user.image) { %> <img class="float-left"
+              src="/backEnd/assets/img/patients/<%= user.image.split("--")[0]
+              %>" width="49" height="49" /> <% } else { %>
+              <img
                 class="float-left"
                 src="/backEnd/assets/img/users/avatar.png"
                 width="49"
                 height="49"
-            /></a>
-            <% } %>
+              />
+              <% } %>
+            </a>
+
             <span class="float-left ml-2">
               <%= user.fName %> <%= user.lName %>
               <br />
@@ -96,23 +106,23 @@
             </span>
           </p>
 
+          <a class="dropdown-item" href="/pationt/pationt_dashpored"
+            ><i class="far fa-fw fa-bell"></i> Dashpored <span>80</span></a
+          >
           <a class="dropdown-item" href="/pationt/pationt_setings"
             ><i class="fa fa-fw fa-user"></i> Settings</a
           >
           <a class="dropdown-item" href="/pationt/pationtfavoritDoctors"
             ><i class="far fa-fw fa-heart"></i> Prefere</a
           >
-            <a class="dropdown-item" href="#"
-              ><i class="far fa-fw fa-envelope"></i> Contact Us</a
-            >
-          <% if (doctor) { %>
-            <a class="dropdown-item" href="/doctor/doctour_dashpored"
-              ><i class="far fa-fw fa-envelope"></i> Doctor Account</a
-            >
-          <% } %>
           <a class="dropdown-item" href="#"
-            ><i class="far fa-fw fa-bell"></i> Notifications <span>80</span></a
+            ><i class="far fa-fw fa-envelope"></i> Contact Us</a
           >
+          <% if (doctor) { %>
+          <a class="dropdown-item" href="/doctor/doctour_dashpored"
+            ><i class="far fa-fw fa-envelope"></i> Doctor Account</a
+          >
+          <% } %>
 
           <form action="/pationt/signOut" method="post">
             <button class="dropdown-item">

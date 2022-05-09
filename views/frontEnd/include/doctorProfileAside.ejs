@@ -32,6 +32,12 @@
               <span>Appointments</span>
             </a>
           </li>
+          <li class="<%= URL == "/appointMentToday" ? "active" : "" %>">
+            <a href="appointMentToday">
+              <i class="fas fa-calendar-check"></i>
+              <span>Appointments Today</span>
+            </a>
+          </li>
           <li class="<%= URL == "/myPationts" ? "active" : "" %>">
             <a href="myPationts">
               <i class="fas fa-user-injured"></i>
@@ -44,23 +50,10 @@
               <span>Schedule Timings</span>
             </a>
           </li>
-          <li class="<%= URL == "/invoices" ? "active" : "" %>">
-            <a href="invoices">
-              <i class="fas fa-file-invoice"></i>
-              <span>Invoices</span>
-            </a>
-          </li>
           <li class="<%= URL == "/reviews" ? "active" : "" %>">
             <a href="reviews">
               <i class="fas fa-star"></i>
               <span>Reviews</span>
-            </a>
-          </li>
-          <li class="<%= URL == "/chat_doctor" ? "active" : "" %>">
-            <a href="chat_doctor">
-              <i class="fas fa-comments"></i>
-              <span>Message</span>
-              <small class="unread-msg">23</small>
             </a>
           </li>
           <li class="<%= URL == "/doctor_setings" ? "active" : "" %>">

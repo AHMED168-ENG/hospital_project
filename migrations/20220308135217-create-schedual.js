@@ -17,7 +17,7 @@ module.exports = {
       Tuesday: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
-      Wednesday: {
+      Wenesday: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
       Thursday: {

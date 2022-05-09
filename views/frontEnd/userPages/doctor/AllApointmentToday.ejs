@@ -1,0 +1,85 @@
+		
+<%- include("../../include/head.ejs")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+            <%- include("../../include/naveBare.ejs")  %> 
+			<!-- Page Content -->
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Appointments</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Appointments</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			<%- include("../../include/notification.ejs")  %> 
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<%- include("../../include/doctorProfileAside.ejs")  %> 		
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="appointments">
+								<% appointMentToday.forEach(element => { %>
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="/userProfile/<%= element.ApointmentPationt.id %>" class="booking-doc-img">
+											<img src="/backEnd/assets/img/patients/<%= element.ApointmentPationt.image.split("--")[0] %>" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html"><%= element.ApointmentPationt.fName + " " + element.ApointmentPationt.lName %></a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> <%= element.createdAt%></h5>
+												<h5><i class="fas fa-map-marker-alt"></i> <%= element.ApointmentPationt.addres %></h5>
+												<h5><i class="fas fa-envelope"></i> <%= element.ApointmentPationt.email %></h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> <%= element.ApointmentPationt.mobile %></h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<% if (!element.accept) { %>
+											<a href="/doctor/acceptClient/<%= element.ApointmentPationt.id %>" class="btn btn-sm bg-success-light">
+												<i class="fas fa-check"></i> Accept
+											</a>
+										<% } %>
+										<a href="/doctor/cancelAppointMent/<%= element.ApointmentPationt.id %>" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> Cancel
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								<% }) %>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->	
+		</div>
+		<!-- /Main Wrapper -->
+        <%- include("../../include/footer.ejs")  %> 
+        <%- include("../../include/footer_script.ejs")  %> 
+		<!-- Custom JS -->
+		<!-- Sticky Sidebar JS -->
+		<script src="/frontEnd/assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+		<script src="/frontEnd/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+		<script src="/frontEnd/assets/js/circle-progress.min.js"></script>
+
+		<script src="/frontEnd/assets/js/script.js"></script>
+    </body>
+</head>

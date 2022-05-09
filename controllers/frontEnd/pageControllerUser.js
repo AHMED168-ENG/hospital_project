@@ -10,26 +10,53 @@ const {
   Rename_uploade_img,
   returnWithMessage,
   Rename_uploade_img_multiFild,
+  getSumOfArray,
 } = require("../../Helper/helper");
 const { sequelize, Op } = require("sequelize");
 const db = require("../../models");
 const paginate = require("express-paginate");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const emoji = require("node-emoji");
+
 /* const emoji = require("node-emoji");
  */
 /*------------------------------ start home Page ------------------------*/
 const homePage = async (req, res, next) => {
   try {
+    var allSpecialist = await db.specialist.findAll({
+      where: {
+        active: true,
+      },
+    });
+    var someOfActiveDoctors = await db.users.findAll({
+      include: [
+        {
+          model: db.doctors,
+          as: "userDoctorData",
+          where: { isActive: true },
+        },
+      ],
+      where: {
+        active: true,
+      },
+      attributes: ["id"],
+      order: [["numberOfPosts", "desc"]],
+      limit: 10,
+    });
     res.render("frontEnd/userPages/homePage", {
       title: "homePage",
+      someOfActiveDoctors,
+      getRateOp: getSumOfArray,
       validationError: req.flash("validationError")[0],
       notification: req.flash("notification")[0],
       user: req.cookies.User,
       doctor: req.cookies.Doctor,
+      allSpecialist,
+      formateDate: formateDate,
     });
   } catch (error) {
-    tryError(res);
+    tryError(res, error);
   }
 };
 /*------------------------------ start home Page ------------------------*/
@@ -37,7 +64,7 @@ const homePage = async (req, res, next) => {
 /*------------------------------ start All_Doctors Page ------------------------*/
 const All_Doctors = async (req, res, next) => {
   try {
-    var doctors = await db.doctors.findAll({
+    var doctors = await db.doctors.findAndCountAll({
       include: [
         {
           model: db.specialist,
@@ -52,18 +79,47 @@ const All_Doctors = async (req, res, next) => {
         specialist: req.query.select_specialist
           ? { [Op.eq]: req.query.select_specialist }
           : { [Op.gt]: 0 },
+        [Op.or]: [
+          {
+            fName: req.query.DoctorName
+              ? { [Op.like]: req.query.DoctorName + "%" }
+              : { [Op.like]: "%%" },
+          },
+          {
+            lName: req.query.DoctorName
+              ? { [Op.like]: req.query.DoctorName + "%" }
+              : { [Op.like]: "%%" },
+          },
+        ],
+        Addres: req.query.CountryName
+          ? { [Op.like]: req.query.CountryName + "%" }
+          : { [Op.like]: "%%" },
       },
       order: [
         req.query.filter
           ? [req.query.filter.split("_")[0], req.query.filter.split("_")[1]]
           : ["createdAt", "asc"],
       ],
+      limit: req.query.limit,
+      offset: (parseInt(req.query.page) - 1) * req.query.limit,
     });
     var specialist = await db.specialist.findAll({
       where: {
         active: true,
       },
     });
+
+    if (req.cookies.User) {
+      var userWithDocotr = await db.users.findOne({
+        include: [
+          { model: db.doctors, as: "userDoctorData", attributes: ["id"] },
+        ],
+        where: {
+          id: req.cookies.User.id,
+        },
+        attributes: ["id"],
+      });
+    }
 
     res.render("frontEnd/userPages/All_Doctors", {
       title: "All_Doctors",
@@ -74,7 +130,14 @@ const All_Doctors = async (req, res, next) => {
       doctors,
       specialist,
       Qyery: req.query,
-      getRateOp: gerSumOfArray,
+      userWithDocotr,
+      getRateOp: getSumOfArray,
+      pages: paginate.getArrayPages(req)(
+        req.query.limit,
+        Math.ceil(doctors.count / req.query.limit),
+        req.query.page
+      ),
+      page: req.query.page,
     });
   } catch (error) {
     tryError(res, error);
@@ -82,6 +145,24 @@ const All_Doctors = async (req, res, next) => {
 };
 /*------------------------------ end All_Doctors Page ------------------------*/
 
+const getSearchDoctorData = async (req, res, next) => {
+  try {
+    var doctors = await db.doctors.findAll({
+      include: [{ model: db.users, as: "DoctorUser", attributes: ["id"] }],
+      where: {
+        fName: {
+          [Op.like]: req.body.search + "%",
+        },
+        Addres: {
+          [Op.like]: req.body.location + "%",
+        },
+      },
+    });
+    res.send(doctors);
+  } catch (error) {
+    tryError(res, error);
+  }
+};
 /*------------------------------ start doctorProfile Page ------------------------*/
 const doctorProfile = async (req, res, next) => {
   try {
@@ -109,6 +190,16 @@ const doctorProfile = async (req, res, next) => {
         id: req.params.id,
       },
     });
+    var userWithDocotr = await db.users.findOne({
+      include: [
+        { model: db.doctors, as: "userDoctorData", attributes: ["id"] },
+      ],
+      where: {
+        id: req.cookies.User ? req.cookies.User.id : 0,
+      },
+      attributes: ["id"],
+    });
+
     if (!doctor) {
       returnWithMessage(
         req,
@@ -118,20 +209,179 @@ const doctorProfile = async (req, res, next) => {
         "danger"
       );
     }
-
     res.render("frontEnd/userPages/doctorProfile", {
       title: "Doctor Profile",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      doctor,
+      userWithDocotr,
+      schdual,
+      FormData: formateDate,
+      getRateOp: getSumOfArray,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+/*------------------------------ end doctorProfile Page ------------------------*/
+/*------------------------------ start doctorProfile Page ------------------------*/
+const bookingDoctor = async (req, res, next) => {
+  try {
+    var userWithDocotr = await db.users.findOne({
+      include: [
+        { model: db.doctors, as: "userDoctorData", attributes: ["id"] },
+      ],
+      where: {
+        id: req.cookies.User.id,
+      },
+      attributes: ["id"],
+    });
+
+    if (
+      userWithDocotr.userDoctorData &&
+      userWithDocotr.userDoctorData.id == req.params.id
+    ) {
+      returnWithMessage(
+        req,
+        res,
+        "/All_Doctors",
+        "you cant booking in your account",
+        "danger"
+      );
+    }
+    var doctor = await db.doctors.findOne({
+      include: [
+        { model: db.specialist, as: "DoctorSpecialist" },
+        {
+          model: db.doctorComments,
+          as: "doctorComment",
+          limit: 4,
+          order: [["createdAt", "desc"]],
+          include: {
+            model: db.users,
+            as: "commentUser",
+            attributes: ["fName", "lName", "image", "id"],
+          },
+        },
+      ],
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    var schdual = await db.schedual.findOne({
+      where: {
+        doctorId: req.params.id,
+      },
+    });
+    var year = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var dayes = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wenesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    var doctorAppointment = await db.doctorAppointment.findAll({
+      where: {
+        doctorId: req.params.id,
+      },
+    });
+    res.render("frontEnd/userPages/bookingDoctor", {
+      title: "booking doctor",
       validationError: req.flash("validationError")[0],
       notification: req.flash("notification")[0],
       user: req.cookies.User,
       doctor: req.cookies.Doctor,
       doctor,
       schdual,
-      getRateOp: gerSumOfArray,
+      getRateOp: getSumOfArray,
       FormData: formateDate,
+      year,
+      dayes,
+      doctorAppointment,
     });
   } catch (error) {
-    tryError(res);
+    tryError(res, error);
+  }
+};
+/*------------------------------ end doctorProfile Page ------------------------*/
+/*------------------------------ start doctorProfile Page ------------------------*/
+const bookingDoctor_post = async (req, res, next) => {
+  try {
+    var pationtAppointment = await db.doctorAppointment.findOne({
+      where: {
+        pationtId: req.body.pationtId,
+        doctorId: req.params.id,
+      },
+    });
+    var anyPationtAppointment = await db.doctorAppointment.findOne({
+      where: {
+        date: req.body.date,
+        doctorId: req.params.id,
+        time: req.body.time,
+        pationtId: {
+          [Op.ne]: req.body.pationtId,
+        },
+      },
+    });
+    if (anyPationtAppointment) {
+      returnWithMessage(
+        req,
+        res,
+        `/bookingDoctor/${req.params.id}`,
+        "you cant chose this date becouse this date is booked",
+        "danger"
+      );
+      return;
+    } else {
+      if (pationtAppointment) {
+        if (pationtAppointment.date == req.body.date) {
+          await db.doctorAppointment.destroy({
+            where: {
+              pationtId: req.body.pationtId,
+              doctorId: req.params.id,
+            },
+          });
+          returnWithMessage(
+            req,
+            res,
+            `/bookingDoctor/${req.params.id}`,
+            "Delete Successful Date",
+            "success"
+          );
+        } else {
+          await db.doctorAppointment.update(req.body, {
+            where: {
+              pationtId: req.body.pationtId,
+            },
+          });
+          returnWithMessage(
+            req,
+            res,
+            `/bookingDoctor/${req.params.id}`,
+            "update Date Successful",
+            "success"
+          );
+        }
+        return;
+      } else {
+        req.body.doctorId = req.params.id;
+        db.doctorAppointment.create(req.body);
+        returnWithMessage(
+          req,
+          res,
+          `/bookingDoctor/${req.params.id}`,
+          "Booking Successful Date",
+          "success"
+        );
+      }
+    }
+  } catch (error) {
+    tryError(res, error);
   }
 };
 /*------------------------------ end doctorProfile Page ------------------------*/
@@ -139,47 +389,64 @@ const doctorProfile = async (req, res, next) => {
 /*------------------------------ start addDoctorComment Page ------------------------*/
 const addDoctorComment = async (req, res, next) => {
   try {
-    await db.doctorComments.create({
-      comment: req.body.comment,
-      userId: req.body.userId,
-      doctorId: req.body.doctorId,
-      Rate: req.body.rate,
-      like: 0,
-      disLike: 0,
-    });
-
-    var doctor = await db.doctors.findOne({
+    var userCommentOnDoctor = await db.doctorComments.findOne({
       where: {
-        id: req.body.doctorId,
+        userId: req.body.userId,
+        doctorId: req.body.doctorId,
       },
     });
-
-    if (doctor.userRate && doctor.userRate.length > 0) {
-      doctor.userRate.push(req.body.rate);
-      doctor.rating = parseInt(doctor.rating) + parseInt(req.body.rate);
-    } else {
-      doctor.userRate = [req.body.rate];
-      doctor.rating = req.body.rate;
+    if (userCommentOnDoctor) {
+      res.send("");
+      return;
     }
+    await db.doctorComments
+      .create({
+        comment: req.body.comment,
+        userId: req.body.userId,
+        doctorId: req.body.doctorId,
+        Rate: req.body.rate,
+        like: 0,
+        disLike: 0,
+        disLikeUser: [],
+        likeUser: [],
+      })
+      .then(async (result) => {
+        var doctor = await db.doctors.findOne({
+          where: {
+            id: req.body.doctorId,
+          },
+        });
 
-    await db.doctors.update(
-      { userRate: doctor.userRate, rating: doctor.rating },
-      {
-        where: {
-          id: req.body.doctorId,
-        },
-      }
-    );
+        if (doctor.userRate && doctor.userRate.length > 0) {
+          doctor.userRate.push(req.body.rate);
+          doctor.rating = parseInt(doctor.rating) + parseInt(req.body.rate);
+        } else {
+          doctor.userRate = [req.body.rate];
+          doctor.rating = req.body.rate;
+        }
 
-    var commentUser = await db.doctorComments.findOne({
-      attributes: ["id"],
-      include: {
-        model: db.users,
-        as: "commentUser",
-        attributes: ["fName", "lName", "image", "id"],
-      },
-    });
-    res.send(commentUser);
+        await db.doctors.update(
+          { userRate: doctor.userRate, rating: doctor.rating },
+          {
+            where: {
+              id: req.body.doctorId,
+            },
+          }
+        );
+
+        var commentUser = await db.doctorComments.findOne({
+          attributes: ["id"],
+          include: {
+            model: db.users,
+            as: "commentUser",
+            attributes: ["fName", "lName", "image", "id"],
+          },
+          where: {
+            id: result.id,
+          },
+        });
+        res.send(commentUser);
+      });
   } catch (error) {
     tryError(res, error);
   }
@@ -219,7 +486,7 @@ const getDataSearch_ajax = async (req, res, next) => {
 const membersPosts = async (req, res, next) => {
   try {
     var Posts = await db.userPosts.findAndCountAll({
-      limit: 4,
+      limit: 5,
       order: [["createdAt", "desc"]],
       include: [
         {
@@ -306,6 +573,7 @@ const membersPosts = async (req, res, next) => {
       order: [["createdAt", "desc"]],
       limit: 10,
     });
+
     var userMessagesNotSeen = await db.usersMessage.findAll({
       where: {
         to: req.cookies.User.id,
@@ -318,6 +586,7 @@ const membersPosts = async (req, res, next) => {
         isSeen: false,
       },
     });
+
     /* ----------- end get user notification --------------*/
 
     /* ----------- start chate aside --------------*/
@@ -356,20 +625,10 @@ const membersPosts = async (req, res, next) => {
       },
     });
 
-    var User_Reserved_Products = await db.shopingCart.findAll({
-      where: {
-        userId: req.cookies.User.id,
-      },
-    });
-    var User_Reserved_ProductsLength = 0;
-    User_Reserved_Products.forEach((ele) => {
-      User_Reserved_ProductsLength += ele.count;
-    });
     res.render("frontEnd/Userpages/membersPosts", {
       title: req.cookies.User.fName,
       notification: req.flash("notification")[0],
       UserCookie: req.cookies.User,
-      User_Reserved_ProductsLength,
       defaultLang: defaultLanguage(),
       date: formateDate,
       url: req.url,
@@ -402,6 +661,7 @@ const getMyAccount = async (req, res, next) => {
     if (!user) {
       tryError(res, "هذا المستخدم غير موجود");
     }
+
     var Posts = await db.userPosts.findAndCountAll({
       where: {
         [Op.or]: [
@@ -468,7 +728,6 @@ const getMyAccount = async (req, res, next) => {
         },
       ],
     });
-
     var images = await db.userPosts.findAll({
       where: {
         image: {
@@ -529,7 +788,6 @@ const getMyAccount = async (req, res, next) => {
       },
     });
     /* ----------- end get frind Frindes --------------*/
-
     /* ----------- start get frind Frindes users Data --------------*/
     if (Frinds) {
       var userId = Frinds.frindesId.slice(0, 10);
@@ -543,7 +801,6 @@ const getMyAccount = async (req, res, next) => {
       });
     }
     /* ----------- end get frind Frindes users Data --------------*/
-
     /* ----------- start get user request --------------*/
     var frindRequest1 = await db.frindesRequest.findOne({
       where: {
@@ -624,7 +881,6 @@ const getMyAccount = async (req, res, next) => {
         userId: req.params.id,
       },
     });
-
     res.render("frontEnd/Userpages/userProfile", {
       title: req.cookies.User.fName,
       notification: req.flash("notification")[0],
@@ -753,20 +1009,21 @@ const addPostAjax = async (req, res, next) => {
         commentNumber: 0,
       })
       .then(async (result) => {
-        var from = await db.users.findOne({
+        var userNumberOfPosts = await db.users.findOne({
           where: {
-            id: req.body.from,
+            id: req.cookies.User.id,
           },
-          attributes: ["image", "id", "fName", "lName"],
+          attributes: ["numberOfPosts"],
         });
-        var to = await db.users.findOne({
-          where: {
-            id: req.body.to,
-          },
-          attributes: ["image", "id", "fName", "lName"],
-        });
-
-        res.send([result, from, to]);
+        await db.users.update(
+          { numberOfPosts: parseInt(userNumberOfPosts.numberOfPosts) + 1 },
+          {
+            where: {
+              id: req.body.from,
+            },
+          }
+        );
+        res.send([result]);
       });
   } catch (error) {
     tryError(res, error);
@@ -789,10 +1046,10 @@ const editPostAjax = async (req, res, next) => {
       req.files.video,
     ]);
     if (files.image) {
-      if (post.image) removeImg(req, "posts/", post.image);
+      if (post.image) removeImg(req, "posts_image/", post.image);
     }
     if (files.video) {
-      if (post.video) removeImg(req, "posts/", post.video);
+      if (post.video) removeImg(req, "posts_image/", post.video);
     }
     await db.userPosts.update(
       {
@@ -861,7 +1118,6 @@ const AddLikesAjax = async (req, res, next) => {
         userLikes.types.push(req.body.type);
         userLikes.usersId.push(req.body.userId);
         userLikes.createdAtLikes.push(new Date());
-        console.log(req.body.postId);
         if (req.body.frindId != req.cookies.User.id) {
           await db.userNotification.create({
             userId: req.body.userId,
@@ -1006,7 +1262,7 @@ const deleteCommentAjax = async (req, res, next) => {
               id: ele.id,
             },
           });
-          if (ele.images) removeImg(req, "commentsPhoto/", ele.images);
+          if (ele.images) removeImg(req, "comment_photo/", ele.images);
           post -= 1;
           await db.userPosts.update(
             { commentNumber: post },
@@ -1029,8 +1285,7 @@ const deleteCommentAjax = async (req, res, next) => {
       },
       attributes: ["images"],
     });
-
-    if (comment.images) removeImg(req, "commentsPhoto/", comment.images);
+    if (comment.images) removeImg(req, "comment_photo/", comment.images);
 
     await db.postComments.destroy({
       where: {
@@ -1063,19 +1318,14 @@ const editCommentAjax = async (req, res, next) => {
       },
       attributes: ["images"],
     });
-    console.log(req.body.numberOFimage);
     if (image) {
-      if (comment.images) removeImg(req, "commentsPhoto/", comment.images);
+      if (comment.images) removeImg(req, "comment_photo/", comment.images);
     } else if (req.body.numberOFimage) {
       image = "";
-      console.log(req.body.numberOFimage);
-      console.log(comment.images);
       comment.images.split("--").forEach((ele, i) => {
-        console.log(i);
-        console.log(ele);
         if (ele.trim() == "") return;
         if (req.body.numberOFimage.split(",").includes(i + "")) {
-          removeImg(req, "commentsPhoto/", ele + "--");
+          removeImg(req, "comment_photo/", ele + "--");
         } else {
           image += ele + "--";
         }
@@ -1309,10 +1559,10 @@ const deletePost_ajax = async (req, res, next) => {
     });
 
     if (post.image) {
-      removeImg(req, "posts/", post.image);
+      removeImg(req, "posts_image/", post.image);
     }
     if (post.video) {
-      removeImg(req, "posts/", post.video);
+      removeImg(req, "posts_image/", post.video);
     }
 
     await db.userPosts.destroy({
@@ -1321,11 +1571,27 @@ const deletePost_ajax = async (req, res, next) => {
       },
     });
 
+    var userNumberOfPosts = await db.users.findOne({
+      where: {
+        id: req.cookies.User.id,
+      },
+      attributes: ["numberOfPosts"],
+    });
+    await db.users.update(
+      { numberOfPosts: parseInt(userNumberOfPosts.numberOfPosts) - 1 },
+      {
+        where: {
+          id: req.cookies.User.id,
+        },
+      }
+    );
+
     var allCommentPost = await db.postComments.findAll({
       where: {
         postId: req.body.postId,
       },
     });
+
     allCommentPost.forEach(async (ele) => {
       await db.postComments.destroy({
         where: {
@@ -1702,7 +1968,6 @@ const CancelRequest = async (req, res, next, type = "cancel") => {
 const acceptFrindRequest = async (req, res, next) => {
   try {
     CancelRequest(req, res, next, "accept");
-    console.log("ahmed");
     var userFrindes = await db.userFrindes.findOne({
       where: {
         userId: req.body.userId,
@@ -1763,7 +2028,7 @@ const changeCoverImage = async (req, res, next) => {
     });
     if (userData) {
       if (userData.coverImage)
-        removeImg(req, "users_photo/cover_image/", userData.coverImage);
+        removeImg(req, "cover_image/", userData.coverImage);
       await db.moreDataForUser.update(
         {
           coverImage: images,
@@ -1853,7 +2118,6 @@ const UserMessage = async (req, res, next) => {
       },
       attributes: ["id", "image", "lName", "fName"],
     });
-
     var UserChate = await db.usersChat.findAll({
       where: {
         from: req.body.userId,
@@ -1886,6 +2150,7 @@ const UserMessage = async (req, res, next) => {
       ],
       order: [["createdAt", "desc"]],
     });
+
     res.send([ActiveUsers, UserChate]);
   } catch (error) {
     tryError(res, error);
@@ -2012,18 +2277,248 @@ const addIsSeenFromChate = async (req, res, next) => {
 };
 /*------------------ addIsSeenFromChate ------------------*/
 
+/*-------------------- add comment ajax ----------------------------------*/
+const addProductInterActionAjax = async (req, res, next) => {
+  try {
+    var comment = await db.doctorComments.findOne({
+      where: {
+        id: req.body.commentId,
+      },
+    });
+    if (req.body.likes > comment.like) {
+      if (comment.disLikeUser.includes(parseInt(req.body.userId))) {
+        comment.disLikeUser.splice(
+          comment.disLikeUser.indexOf(parseInt(req.body.userId)),
+          1
+        );
+      }
+      comment.likeUser.push(parseInt(req.body.userId));
+    } else {
+      if (comment.likeUser.includes(parseInt(parseInt(req.body.userId)))) {
+        comment.likeUser.splice(
+          comment.likeUser.indexOf(parseInt(req.body.userId)),
+          1
+        );
+      }
+      if (req.body.desLikes > comment.disLike) {
+        comment.disLikeUser.push(parseInt(req.body.userId));
+      } else {
+        comment.disLikeUser.splice(
+          comment.disLikeUser.indexOf(parseInt(req.body.userId)),
+          1
+        );
+      }
+    }
+    await db.doctorComments.update(
+      {
+        like: req.body.likes,
+        disLike: req.body.desLikes,
+        likeUser: comment.likeUser,
+        disLikeUser: comment.disLikeUser,
+      },
+      {
+        where: {
+          id: req.body.commentId,
+        },
+      }
+    );
+    res.send("تم التعديل بنجاح");
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+/*-------------------- add comment ajax ----------------------------------*/
+const allDoctorComments = async (req, res, error) => {
+  try {
+    var doctorComments = await db.doctorComments.findAndCountAll({
+      limit: req.query.limit,
+      offset: parseInt(req.query.page - 1) * req.query.limit,
+      order: [["like", "desc"]],
+      include: {
+        model: db.users,
+        as: "commentUser",
+        attributes: ["fName", "lName", "image", "id"],
+      },
+      where: {
+        doctorId: req.params.id,
+      },
+    });
+
+    var doctor = await db.doctors.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    var query = req.query;
+    res.render("frontEnd/userPages/allDoctorComments", {
+      title: "allDoctorComments",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      query,
+      doctor,
+      formateDate: formateDate,
+      doctorComments,
+      pages: paginate.getArrayPages(req)(
+        req.query.limit,
+        Math.ceil(doctorComments.count / req.query.limit),
+        req.query.page
+      ),
+      page: req.query.page,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+
+const allPharmacy = async (req, res, error) => {
+  try {
+    var allPharmacy = await db.medicin.findAll({
+      where: {
+        province: {
+          [Op.like]: `${req.query.province ? req.query.province : ""}%`,
+        },
+        village: {
+          [Op.like]: `${req.query.village ? req.query.village : ""}%`,
+        },
+      },
+    });
+    res.render("frontEnd/userPages/allPharmacy", {
+      title: "All Pharmacy",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      formateDate: formateDate,
+      pages: paginate.getArrayPages(req)(
+        req.query.limit,
+        Math.ceil(allPharmacy.length / req.query.limit),
+        req.query.page
+      ),
+      page: req.query.page,
+      Qyery: req.query,
+      allPharmacy,
+      doctor: req.cookies.Doctors,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+const showPharmacy = async (req, res, error) => {
+  try {
+    var Pharmacy = await db.medicin.findOne({});
+    res.render("frontEnd/userPages/PharmacyData", {
+      title: "Pharmacy Data",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      formateDate: formateDate,
+      Qyery: req.query,
+      Pharmacy,
+      doctor: req.cookies.Doctors,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+const showLab = async (req, res, error) => {
+  try {
+    var Lab = await db.labs.findOne({});
+    res.render("frontEnd/userPages/LabsData", {
+      title: "lab Data",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      formateDate: formateDate,
+      Qyery: req.query,
+      Lab,
+      doctor: req.cookies.Doctors,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+const allLabs = async (req, res, error) => {
+  try {
+    var allLabs = await db.labs.findAll({
+      where: {
+        province: {
+          [Op.like]: `${req.query.province ? req.query.province : ""}%`,
+        },
+        village: {
+          [Op.like]: `${req.query.village ? req.query.village : ""}%`,
+        },
+      },
+    });
+    res.render("frontEnd/userPages/allLabs", {
+      title: "All Pharmacy",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      formateDate: formateDate,
+      pages: paginate.getArrayPages(req)(
+        req.query.limit,
+        Math.ceil(allLabs.length / req.query.limit),
+        req.query.page
+      ),
+      page: req.query.page,
+      Qyery: req.query,
+      allLabs,
+      doctor: req.cookies.Doctors,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+
+const mackOrderController = async (req, res, next) => {
+  try {
+    res.render("frontEnd/userPages/mackOrder", {
+      title: "Mack Order",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      doctor: req.cookies.Doctors,
+    });
+  } catch (error) {
+    tryError(res);
+  }
+};
+
+const mackOrderControllerPost = async (req, res, next) => {
+  try {
+    var errors = validationResult(req).errors;
+    if (errors.length > 0) {
+      handel_validation_errors(req, res, errors, "/mackOrder/" + req.params.id);
+      removeImg(req, "pharmacyOrderImage/");
+      return;
+    }
+    var image = Rename_uploade_img(req);
+    req.body.image = image;
+    await db.pharmacyOrders.create(req.body);
+
+    returnWithMessage(
+      req,
+      res,
+      "/mackOrder/" + req.params.id,
+      "Order successful remepmer you should call pharmacy number for confirming order",
+      "success"
+    );
+  } catch (error) {
+    tryError(res);
+  }
+};
 module.exports = {
-  MainPageController,
-  catigoryShow_controller,
-  productDetails_controller,
-  getProductAllComments,
-  getAllProduct,
+  allPharmacy,
+  mackOrderControllerPost,
+  mackOrderController,
   getDataSearch_ajax,
   getMyAccount,
   editPersonalInformationGet,
   editPersonalInformationPost,
   editPostAjax,
   getSearchUserData,
+  showLab,
+  allLabs,
   addPostAjax,
   AddLikesAjax,
   addCommentOnPosts,
@@ -2042,14 +2537,20 @@ module.exports = {
   CancelRequest,
   acceptFrindRequest,
   changeCoverImage,
+  bookingDoctor_post,
   UserMessage,
   sendMessage,
   getFrindMessages,
+  allDoctorComments,
   getUserNotification,
   removeIsSeenFromChate,
   addIsSeenFromChate,
   homePage,
   All_Doctors,
   doctorProfile,
+  getSearchDoctorData,
   addDoctorComment,
+  bookingDoctor,
+  addProductInterActionAjax,
+  showPharmacy,
 };

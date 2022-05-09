@@ -10,6 +10,7 @@ const {
 } = require("../../Helper/helper");
 const db = require("../../models");
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 
 /*------------------------------ start home Page ------------------------*/
 const doctor_dashpored = async (req, res, next) => {
@@ -30,6 +31,17 @@ const doctor_dashpored = async (req, res, next) => {
 /*------------------------------ start appointMent Page ------------------------*/
 const appointMent = async (req, res, next) => {
   try {
+    var doctorAppointment = await db.doctorAppointment.findAll({
+      include: [
+        {
+          model: db.users,
+          as: "ApointmentPationt",
+        },
+      ],
+      where: {
+        doctorId: req.cookies.Doctor.id,
+      },
+    });
     res.render("frontEnd/userPages/doctor/appointMent", {
       title: "Doctor appointMent",
       validationError: req.flash("validationError")[0],
@@ -37,15 +49,130 @@ const appointMent = async (req, res, next) => {
       user: req.cookies.User,
       URL: req.url,
       doctor: req.cookies.Doctor,
+      doctorAppointment,
     });
   } catch (error) {
-    tryError(res);
+    tryError(res, error);
+  }
+};
+/*------------------------------ start appointMent Page ------------------------*/
+/*------------------------------ start appointMent Page ------------------------*/
+const appointMentToday = async (req, res, next) => {
+  try {
+    var appointMentToday = await db.doctorAppointment.findAll({
+      include: [
+        {
+          model: db.users,
+          as: "ApointmentPationt",
+        },
+      ],
+      where: {
+        doctorId: req.cookies.Doctor.id,
+        date: new Date().getDate() + " / " + (new Date().getMonth() + 1),
+      },
+    });
+    res.render("frontEnd/userPages/doctor/AllApointmentToday", {
+      title: "Doctor appointMent",
+      validationError: req.flash("validationError")[0],
+      notification: req.flash("notification")[0],
+      user: req.cookies.User,
+      URL: req.url,
+      doctor: req.cookies.Doctor,
+      appointMentToday,
+    });
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+/*------------------------------ start appointMent Page ------------------------*/
+/*------------------------------ start appointMent Page ------------------------*/
+const AcceptAppointMent = async (req, res, next) => {
+  try {
+    var doctorClient = await db.doctorClient.findOne({
+      where: {
+        doctorId: req.cookies.Doctor.id,
+      },
+    });
+    if (doctorClient) {
+      if (!doctorClient.clientId.includes(req.params.id)) {
+        var doctorClientDate = doctorClient.toJSON();
+        doctorClientDate.clientId.push(req.params.id);
+        await db.doctorClient.update(doctorClientDate, {
+          where: {
+            doctorId: req.cookies.Doctor.id,
+          },
+        });
+      }
+    } else {
+      await db.doctorClient.create({
+        doctorId: req.cookies.Doctor.id,
+        clientId: [req.params.id],
+      });
+    }
+    await db.doctorAppointment.update(
+      { accept: true },
+      {
+        where: {
+          doctorId: req.cookies.Doctor.id,
+          pationtId: req.params.id,
+        },
+      }
+    );
+
+    returnWithMessage(
+      req,
+      res,
+      "/doctor/appointMent",
+      "accept clint successful and the message sent to user",
+      "success"
+    );
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+/*------------------------------ start appointMent Page ------------------------*/
+/*------------------------------ start appointMent Page ------------------------*/
+const cancelAppointMent = async (req, res, next) => {
+  try {
+    await db.doctorAppointment.destroy({
+      where: {
+        doctorId: req.cookies.Doctor.id,
+        pationtId: req.params.id,
+      },
+    });
+
+    returnWithMessage(
+      req,
+      res,
+      "/doctor/appointMent",
+      "accept clint successful and the message sent to user",
+      "success"
+    );
+  } catch (error) {
+    tryError(res, error);
   }
 };
 /*------------------------------ start appointMent Page ------------------------*/
 /*------------------------------ start myPationts Page ------------------------*/
 const myPationts = async (req, res, next) => {
   try {
+    var doctorClient = await db.doctorClient.findOne({
+      where: {
+        doctorId: req.cookies.Doctor.id,
+      },
+    });
+    var doctorClientData = [];
+    if (doctorClient) {
+      var doctorClientData = await db.users.findAll({
+        where: {
+          id: {
+            [Op.in]: doctorClient.clientId,
+          },
+          active: true,
+        },
+      });
+    }
+
     res.render("frontEnd/userPages/doctor/myPationts", {
       title: "Doctor Pationts",
       validationError: req.flash("validationError")[0],
@@ -53,12 +180,14 @@ const myPationts = async (req, res, next) => {
       user: req.cookies.User,
       URL: req.url,
       doctor: req.cookies.Doctor,
+      doctorClientData,
     });
   } catch (error) {
-    tryError(res);
+    tryError(res, error);
   }
 };
 /*------------------------------ start myPationts Page ------------------------*/
+
 /*------------------------------ start schedual Page ------------------------*/
 const schedual = async (req, res, next) => {
   try {
@@ -67,6 +196,7 @@ const schedual = async (req, res, next) => {
         doctorId: req.cookies.Doctor.id,
       },
     });
+
     res.render("frontEnd/userPages/doctor/schedual", {
       title: "Doctor schedual",
       validationError: req.flash("validationError")[0],
@@ -147,6 +277,7 @@ const delete_schedual = async (req, res, next) => {
         doctorId: req.cookies.Doctor.id,
       },
     });
+
     schedual[req.body.day].splice(req.body.index, 1);
     var schedual = await db.schedual.update(
       {
@@ -184,16 +315,25 @@ const invoices = async (req, res, next) => {
 /*------------------------------ start invoices Page ------------------------*/
 const reviews = async (req, res, next) => {
   try {
+    var doctorComments = await db.doctorComments.findAll({
+      include: [{ model: db.users, as: "commentUser" }],
+      where: {
+        doctorId: req.cookies.Doctor.id,
+      },
+    });
+
     res.render("frontEnd/userPages/doctor/reviews", {
       title: "Doctor schedual",
       validationError: req.flash("validationError")[0],
       notification: req.flash("notification")[0],
+      doctorComments,
       user: req.cookies.User,
       URL: req.url,
       doctor: req.cookies.Doctor,
+      DateFormat: formateDate,
     });
   } catch (error) {
-    tryError(res);
+    tryError(res, error);
   }
 };
 /*------------------------------ start invoices Page ------------------------*/
@@ -431,4 +571,7 @@ module.exports = {
   socialmedia_post,
   add_schedual_post,
   delete_schedual,
+  AcceptAppointMent,
+  appointMentToday,
+  cancelAppointMent,
 };

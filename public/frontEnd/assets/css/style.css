@@ -3922,6 +3922,7 @@ html.menu-opened body {
 }
 .review-listing > ul li .comment .comment-body {
   margin-left: 16px;
+  flex-grow: 1;
 }
 .review-listing > ul li .comment .comment-body .meta-data {
   position: relative;
@@ -4162,9 +4163,7 @@ html.menu-opened body {
   width: 20px !important;
   transform: translateY(-50%);
 }
-.schedule-cont {
-  padding: 20px;
-}
+
 .time-slot ul {
   list-style: none;
   margin-right: -5px;
@@ -4208,8 +4207,8 @@ html.menu-opened body {
   font-size: 12px;
   font-weight: 900;
   position: absolute;
-  right: 6px;
-  top: 6px;
+  right: 1px;
+  top: 16px;
 }
 .schedule-list {
   border-bottom: 1px solid #cfcfcf;

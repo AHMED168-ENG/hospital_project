@@ -50,6 +50,9 @@ module.exports = {
       active: {
         type: Sequelize.BOOLEAN,
       },
+      numberOfPosts: {
+        type: Sequelize.INTEGER,
+      },
       isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,

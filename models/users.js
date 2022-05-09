@@ -8,7 +8,31 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      users.hasOne(models.doctors, {
+        as: "userDoctorData",
+        foreignKey: "userId",
+      });
+      users.hasMany(models.postComments, {
+        as: "userPostsComment",
+        foreignKey: "userId",
+      });
+      users.hasMany(models.userPosts, { as: "UserPosts", foreignKey: "from" });
+      users.hasMany(models.userNotification, {
+        foreignKey: "userId",
+        as: "userNotification",
+      });
+      users.hasMany(models.usersMessage, {
+        as: "userToMessage",
+        foreignKey: "to",
+      });
+      users.hasMany(models.usersMessage, {
+        as: "userFromMessage",
+        foreignKey: "from",
+      });
+      users.hasMany(models.doctorAppointment, {
+        as: "pationtApointment",
+        foreignKey: "pationtId",
+      });
     }
   }
   users.init(
@@ -26,12 +50,20 @@ module.exports = (sequelize, DataTypes) => {
       Date_brith: DataTypes.DATE,
       bloodType: DataTypes.STRING,
       isDoctor: DataTypes.BOOLEAN,
+      numberOfPosts: DataTypes.INTEGER,
       active: DataTypes.BOOLEAN,
       isAdmin: DataTypes.BOOLEAN,
     },
     {
       sequelize,
       modelName: "users",
+      scopes: {
+        active: {
+          where: {
+            active: true,
+          },
+        },
+      },
     }
   );
   return users;

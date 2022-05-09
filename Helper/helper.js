@@ -185,7 +185,7 @@ function formateDate(date, type = "date") {
 /*--------------------- end formateDate ---------------------*/
 
 /*--------------------- start formate date ---------------------*/
-function gerSumOfArray(array) {
+function getSumOfArray(array) {
   var sum = 0;
   array.forEach((element) => {
     if (element) {
@@ -210,5 +210,5 @@ module.exports = {
   removeImgFiled,
   defaultLanguage,
   formateDate,
-  gerSumOfArray,
+  getSumOfArray,
 };

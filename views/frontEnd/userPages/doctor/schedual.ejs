@@ -74,7 +74,7 @@
 																			<a class="nav-link"  onclick="getDay('Tuesday')" data-toggle="tab" href="#slot_tuesday">Tuesday</a>
 																		</li>
 																		<li class="nav-item">
-																			<a class="nav-link"  onclick="getDay('Wednesday')" data-toggle="tab" href="#slot_wednesday">Wednesday</a>
+																			<a class="nav-link"  onclick="getDay('Wenesday')" data-toggle="tab" href="#slot_wenesday">Wenesday</a>
 																		</li>
 																		<li class="nav-item">
 																			<a class="nav-link"  onclick="getDay('Thursday')" data-toggle="tab" href="#slot_thursday">Thursday</a>
@@ -101,7 +101,7 @@
 																		<span>Time Slots</span> 
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
-																	<% if (schedual.Sunday && schedual.Sunday.length > 0) { %>
+																	<% if (schedual && schedual.Sunday && schedual.Sunday.length > 0) { %>
 																	 	<% schedual.Sunday.forEach((element,i) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
@@ -127,7 +127,7 @@
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
 																	
-																	<% if (schedual.Monday && schedual.Monday.length > 0) { %>
+																	<% if (schedual && schedual.Monday && schedual.Monday.length > 0) { %>
 																	 	<% schedual.Monday.forEach((element,i) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
@@ -153,7 +153,7 @@
 																		<span>Time Slots</span> 
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
-																	<% if (schedual.Tuesday && schedual.Tuesday.length > 0) { %>
+																	<% if (schedual && schedual.Tuesday && schedual.Tuesday.length > 0) { %>
 																	 	<% schedual.Tuesday.forEach((element , i) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
@@ -171,20 +171,20 @@
 																</div>
 																<!-- /Tuesday Slot -->
 
-																<!-- Wednesday Slot -->
-																<div id="slot_wednesday" class="tab-pane fade">
+																<!-- Wenesday Slot -->
+																<div id="slot_wenesday" class="tab-pane fade">
 																	<h4 class="card-title d-flex justify-content-between">
 																		<span>Time Slots</span> 
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
-																	<% if (schedual.Wednesday && schedual.Wednesday.length > 0) { %>
-																	 	<% schedual.Wednesday.forEach((element,i) => { %>
+																	<% if (schedual && schedual.Wenesday && schedual.Wenesday.length > 0) { %>
+																	 	<% schedual.Wenesday.forEach((element,i) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
 																					<div class="doc-slot-list">
 																						<%= element.replace("__" , " - ") %>
 																						<a href="javascript:void(0)" class="delete_schedule">
-																							<i onclick="deleteTime(event , '<%= i %>' , 'Wednesday')" class="fa fa-times"></i>
+																							<i onclick="deleteTime(event , '<%= i %>' , 'Wenesday')" class="fa fa-times"></i>
 																						</a>
 																					</div>
 																				</div>
@@ -193,7 +193,7 @@
 																		<p class="text-muted mb-0">Not Available</p>
 																	<% } %>																
 																</div>
-																<!-- /Wednesday Slot -->
+																<!-- /Wenesday Slot -->
 
 																<!-- Thursday Slot -->
 																<div id="slot_thursday" class="tab-pane fade">
@@ -201,7 +201,7 @@
 																		<span>Time Slots</span> 
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
-																	<% if (schedual.Thursday && schedual.Thursday.length > 0) { %>
+																	<% if (schedual && schedual.Thursday && schedual.Thursday.length > 0) { %>
 																	 	<% schedual.Thursday.forEach((element,i) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
@@ -225,7 +225,7 @@
 																		<span>Time Slots</span> 
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
-																	<% if (schedual.Friday && schedual.Friday.length > 0) { %>
+																	<% if (schedual && schedual.Friday && schedual.Friday.length > 0) { %>
 																	 	<% schedual.Friday.forEach((element,i) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
@@ -249,8 +249,8 @@
 																		<span>Time Slots</span> 
 																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-plus-circle"></i> Add Slot</a>
 																	</h4>
-																	<% if (schedual.Saturday && schedual.Saturday.length > 0) { %>
-																	 	<% schedual.Saturday.forEach(element => { %>
+																	<% if (schedual && schedual.Saturday && schedual.Saturday.length > 0) { %>
+																	 	<% schedual.Saturday.forEach((element, i ) => { %>
 																			<!-- Slot List -->
 																				<div class="doc-times">
 																					<div class="doc-slot-list">

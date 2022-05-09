@@ -14,6 +14,9 @@ const {
   socialmedia_post,
   add_schedual_post,
   delete_schedual,
+  AcceptAppointMent,
+  appointMentToday,
+  cancelAppointMent,
 } = require("../../controllers/frontEnd/doctorController");
 const { uploade_img, uploade_img_multi_fild } = require("../../Helper/helper");
 const {
@@ -37,6 +40,24 @@ Router.get(
   doctor_dashpored
 );
 Router.get("/appointMent", userAuthonticat, DoctorAuthonticat, appointMent);
+Router.get(
+  "/appointMentToday",
+  userAuthonticat,
+  DoctorAuthonticat,
+  appointMentToday
+);
+Router.get(
+  "/acceptClient/:id",
+  userAuthonticat,
+  DoctorAuthonticat,
+  AcceptAppointMent
+);
+Router.get(
+  "/cancelAppointMent/:id",
+  userAuthonticat,
+  DoctorAuthonticat,
+  cancelAppointMent
+);
 Router.get("/myPationts", userAuthonticat, DoctorAuthonticat, myPationts);
 Router.get("/schedual", userAuthonticat, DoctorAuthonticat, schedual);
 Router.post(

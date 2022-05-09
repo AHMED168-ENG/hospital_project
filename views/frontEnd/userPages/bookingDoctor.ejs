@@ -1,0 +1,181 @@
+<style>
+	.rating i.active {
+		color:rgb(224, 210, 5)
+	}
+</style>
+<%- include("../include/head.ejs")  %> 
+<body>
+    <head>
+        <!-- Main Wrapper -->
+		<div class="main-wrapper">
+        <%- include("../include/naveBare.ejs")  %> 
+			<!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-12">
+                <nav aria-label="breadcrumb" class="page-breadcrumb">
+                    <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Booking
+                    </li>
+                    </ol>
+                </nav>
+                <h2 class="breadcrumb-title">Booking</h2>
+                </div>
+            </div>
+            </div>
+        </div>
+			<!-- /Breadcrumb --> 
+
+
+
+      <!-- Page Content -->
+      <div class="content">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="booking-doc-info">
+                    <a href="doctor-profile.html" class="booking-doc-img">
+                      <img
+                        src="/backEnd/assets/img/doctors/<%= doctor.doctorImage.split("--")[0] %>"
+                        alt="User Image"
+                      />
+                    </a>
+                    <div class="booking-info">
+                      <h4>
+                        <a href="doctor-profile.html"><%= doctor.fName + " " + doctor.lName %></a>
+                      </h4>
+                      <div class="rating">
+                        <i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 1 ? "active" :  "" %>"></i>
+                        <i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 2 ? "active" :  "" %>"></i>
+                        <i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 3 ? "active" :  "" %>"></i>
+                        <i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 4 ? "active" :  "" %>"></i>
+                        <i class="fas fa-star <%= Math.ceil(((getRateOp(doctor.userRate) * 100) / (doctor.userRate.length * 5)) /20) >= 5 ? "active" :  "" %>"></i>
+                        <span class="d-inline-block average-rating">(<%= doctor.userRate.length %>)</span>
+                      </div>
+                      <p class="doc-department"><img src="/backEnd/assets/img/specialities/<%= doctor.DoctorSpecialist ? doctor.DoctorSpecialist.image.split("--")[0] : "01.jpg" %>" class="img-fluid" alt="Speciality"><%= doctor.DoctorSpecialist ? doctor.DoctorSpecialist.name : "not Edit Before" %></p>
+                      <p class="text-muted mb-0">
+                        <i class="fas fa-map-marker-alt"></i> Newyork, USA
+                      </p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <%- include("../include/notification.ejs")  %> 
+              <div class="row align-items-center justify-content-center ">
+                <div class="col-12" style="border:1px solid #ddd;background:#cbd1fd ; margin-bottom:30px;padding:15px 40px;border-radius: 10px;text-align: center;box-shadow: 5px 5px 10px rgba(0,0,0,0.1),5px 5px 18px rgba(0,0,0,0.1) inset;">
+                    <h4 class="mb-1"><%= new Date().getUTCDate() + " " + new Date().toString().split(" ")[1] + " " + new Date().getFullYear() %></h4>
+                    <p style="margin:0" class="text-muted"><%= new Date().toString().split(" ")[0] %></p>
+                  </div>
+              </div>
+              <!-- Schedule Widget -->
+              <% if (schdual) { %>
+                <div class="card booking-schedule schedule-widget">
+                <!-- Schedule Header -->
+                <div class="schedule-header">
+                  <div class="doctor-slider2 slider" >
+                    <% year.forEach((element , i) => { %>
+                      <% for(var x = 1 ; x <= element ; x++){ %>
+                        <% if (new Date().getUTCDate() <= x && new Date().getMonth() == i) { %>
+                          <div style="padding:0 4px">
+                            <!-- Day Slot -->
+                            <div class="day-slot">
+                              <ul>
+                                <li style="width:100%;margin-bottom:10px">
+                                    <span><%= dayes[Math.ceil(x % 7) == 0 ? 6 : Math.ceil(x % 7) - 1] %></span>
+                                    <small><%= x + " / " + (i + 1) + " / " + new Date().getFullYear() %></small>
+                                </li>
+                              </ul>
+                              </div>
+                              <!-- /Day Slot -->
+                              <!-- Schedule Content -->
+                               <div>
+                                  <!-- Time Slot -->
+                                  <div class="time-slot" >
+                                    <ul class="clearfix">
+                                      <li style="width:100%">
+                                        <% if (schdual[dayes[Math.ceil(x % 7) == 0 ? 6 : Math.ceil(x % 7) - 1]]) { %>
+                                          <% schdual[dayes[Math.ceil(x % 7) == 0 ? 6 : Math.ceil(x % 7) - 1] ].forEach(element => { %>
+                                            <span class="timing <%= doctorAppointment.some((ele) => ele.pationtId == user.id && ele.date == (x + " / " + (i + 1)) && ele.time ==element) ? "selected"  :"" %>" onclick="bookingDate(event , '<%= `${x} / ${i + 1}` %>') ">
+                                              <%= element %>
+                                            </span>
+                                          <% }) %>
+                                        <% } else { %>
+                                          <span class="timing">Holiday</span>
+                                        <% } %>
+                                    </ul>
+                                  </div>
+                                  <!-- /Time Slot -->
+                                </div>
+                              <!-- /Schedule Content -->
+                          </div>
+                        <% } %> 
+                     <% } %>
+                    <% }) %>
+                  </div>
+                </div>
+                <!-- /Schedule Header -->
+
+
+              </div>
+              <!-- Submit Section -->
+              <div class="submit-section proceed-btn text-center">
+                  <form action="/bookingDoctor/<%= doctor.id %>" method="post" onsubmit="lastStep(event)">
+                    <input type="hidden" name="pationtId" value="<%= user.id %>">
+                    <input type="hidden" name="date" value="">
+                    <input type="hidden" name="time" value="">
+                    <button type="submit" class="btn btn-primary submit-btn">Booking Now</button>
+                  </form>
+                </div>
+              <!-- /Submit Section -->
+              <% } else { %>
+                <div class="alert alert-danger">There is no Timing for Doctor</div>
+              <% } %>
+
+              <!-- /Schedule Widget -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Page Content -->
+		</div>
+		<!-- /Main Wrapper -->
+        <%- include("../include/footer.ejs")  %> 
+        <%- include("../include/footer_script.ejs")  %> 
+        <script src="/frontEnd/assets/js/slick.js"></script>
+        <script>
+          var lastDate = null
+          var myFormInput = document.querySelectorAll("form input")
+          function bookingDate(e , date) {
+            if(lastDate) {
+              lastDate.classList.remove("selected")
+            }
+            lastDate = e.target
+            lastDate.classList.add("selected")
+            myFormInput[1].value = date
+            myFormInput[2].value = e.target.innerHTML.trim()
+            
+          }
+
+          function lastStep(e) {
+            if(!e.target.querySelectorAll("input")[1].value) {
+              alert("you should booking date before")
+              e.preventDefault();
+            } else {
+              var varying = confirm(`Are you okay that you wont to booking at \n ${e.target.querySelectorAll("input")[1].value} \n ${e.target.querySelectorAll("input")[2].value}`)
+              if(varying) {
+              } else {
+                e.preventDefault();
+              }
+            }
+          }
+        </script>
+		<!-- Custom JS -->
+		<script src="/frontEnd/assets/js/script.js"></script>
+    </body>
+</head>

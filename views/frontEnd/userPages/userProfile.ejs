@@ -6,18 +6,42 @@
 <!-- BEGIN VENDOR CSS-->
 <link rel="stylesheet" type="text/css" href="/admin/asset/css/vendors.css">
 <link rel="stylesheet" type="text/css" href="/admin/asset/css-rtl/app.css">
-<style>
-    body {
-        height:1500px !important
-    }
-</style>
-<%- include("../inclueds/head")  %>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@600&family=Open+Sans:wght@300;400&family=Tajawal:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Poppins:ital,wght@0,100;0,400;1,200&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Poppins:ital,wght@0,100;0,200;1,200&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quintessential&display=swap"
+      rel="stylesheet"
+    />
+<%- include("../include/head")  %>
+  <link rel="stylesheet" href="/frontEnd/assets/css/main.css" />
 
+    <title><%= title %></title>
+    <style>
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      * {
+        font-family: "Tajawal", sans-serif;
+      }
+    </style>
 <head>
 <body>
   
-    <%- include("../inclueds/navPareUserProfile")  %>
-    <%- include("../inclueds/alert")  %>
+    <%- include("../include/navPareUserProfile")  %>
+    <%- include("../include/alert")  %>
 
 <div class="userProfile">
   <!-- Button trigger modal -->
@@ -28,7 +52,7 @@
         <div class="row">
           <div class="col-12">
             <div class="card profile-with-cover">
-              <div class="cover card-img-top img-fluid bg-cover height-350" style="background: url('/admin/asset/images/<%= moreDataForUser ? (moreDataForUser.coverImage ? `users_photo/cover_image/${moreDataForUser.coverImage.split("--")[0]}` : "carousel/14.jpg") : "carousel/14.jpg" %>') 50%;">
+              <div class="cover card-img-top img-fluid bg-cover height-350" style="background: url('/backEnd/assets/img/<%= moreDataForUser ? (moreDataForUser.coverImage ? `cover_image/${moreDataForUser.coverImage.split("--")[0]}` : "carousel/14.jpg") : "carousel/14.jpg" %>') 50%;">
                 <% if (UserCookie.id == user.id) { %>
                   <button onchange="changCoverPhoto(event)"><input type="file" accept="image/*"><i class="fa fa-camera"></i> تعديل صوره الغلاف </button>
                 <% } %>
@@ -37,7 +61,7 @@
                 <div class="media-left pl-2 pt-2">
                   <div class="personalData">
                     <a href="#" class="profile-image">
-                      <img src="/admin/asset/images/users_photo/<%= user.image.split("--")[0] %>" 
+                      <img src="/backEnd/assets/img/patients/<%= user.image.split("--")[0] %>" 
                       alt="Card image">
                     </a>
                     <div class="userData">
@@ -46,7 +70,7 @@
                         <div class="d-flex frindes">
                           <% userfrindesData.forEach(element => { %>
                             <a class="online ID<%= element.id %>"  href="/userProfile/<%= element.id %>" title="<%= element.fName %> <%= element.lName %>">
-                              <img src="/admin/asset/images/users_photo/<%= element.image.split("--")[0] %>" alt="">
+                              <img src="/backEnd/assets/img/patients/<%= element.image.split("--")[0] %>" alt="">
                               <span>
                                 <span></span>
                               </span>
@@ -59,16 +83,16 @@
                 </div>
                 <div class="media-body pt-3 px-2">
                   <div class="row">
-                    <div class="col text-right">
+                    <div class="col d-flex justify-content-end" >
                       <% if (UserCookie.id != user.id) { %>
-                        <button type="button" data_type="<%= ifFrind %>" class="btn btn-<%= ifFrind == "no" ? "primary" :  ifFrind == "yes" ? "danger" : ifFrind == "pending" ? "secondary" : "" %> addFrind "><i class="la la-<%= ifFrind == "no" ? "plus" : "minus" %>"></i> <span><%= ifFrind == "yes" ? "UnFollow" : ifFrind == "no" ? "Follow" : ifFrind == "pending" ? "Cancel" : "" %></span></button>
+                        <button style="margin-left:10px" type="button" data_type="<%= ifFrind %>" class="btn btn-<%= ifFrind == "no" ? "primary" :  ifFrind == "yes" ? "danger" : ifFrind == "pending" ? "secondary" : "" %> addFrind "><i class="la la-<%= ifFrind == "no" ? "plus" : "minus" %>"></i> <span><%= ifFrind == "yes" ? "UnFollow" : ifFrind == "no" ? "Follow" : ifFrind == "pending" ? "Cancel" : "" %></span></button>
                       <% } %>
                       <div class="btn-group d-none d-md-block float-right ml-2" role="group" aria-label="Basic example">
                         <% if (UserCookie.id != user.id) { %>
                           <button onclick="openChate(event , '<%= user.id %>')" type="button" class="btn btn-success"><i class="la la-dashcube"></i> Message</button>
                         <% } %>
                         <% if (UserCookie.id == user.id) { %>
-                          <a href="/editPersonalInformation"><button type="button" class="btn btn-success d-flex align-items-center" ><i class="la la-cog"></i>  تعديل البيانات الشخصه</button></a>
+                          <a href="/pationt/pationt_setings"><button type="button" class="btn btn-success d-flex align-items-center" ><i class="la la-cog"></i>  تعديل البيانات الشخصه</button></a>
                         <% } %>
                       </div>
                     </div>
@@ -118,7 +142,7 @@
                       <li><i class="fa fa-location-arrow" aria-hidden="true"></i><span>العنوان :</span> <%= user.addres %> </li>
                       <li><i class="fa fa-user" aria-hidden="true"></i> <span>العمر :</span> <%= user.age %> </li>
                       <li><i class="fa fa-user" aria-hidden="true"></i><span>ادمن :</span> <%= user.isAdmin ? "yes" : "no" %> </li>
-                      <li><i class="fa fa-user" aria-hidden="true"></i><span>باءع :</span> <%= user.isVendor ? "yes" : "no" %> </li>
+                      <li><i class="fa fa-user" aria-hidden="true"></i><span>دكتور :</span> <%= user.isDoctor ? "yes" : "no" %> </li>
                       <li><i class="fa fa-user" aria-hidden="true"></i><span>الموبيل :</span> <%= "0" + user.number %> </li>
                   </ul>
               </div>
@@ -134,8 +158,8 @@
                         <div class="row" style="margin:0">
                           <% images.forEach(element => { %>
                             <figure class="col-lg-4 col-md-6 col-12" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                              <a href="/admin/asset/images/posts/<%= element.image.split("--")[0] %>" itemprop="contentUrl" data-size="480x360">
-                                <img class="img-thumbnail img-fluid" src="/admin/asset/images/posts/<%= element.image.split("--")[0] %>"
+                              <a href="/backEnd/assets/img/posts_image/<%= element.image.split("--")[0] %>" itemprop="contentUrl" data-size="480x360">
+                                <img class="img-thumbnail img-fluid" src="/backEnd/assets/img/posts_image/<%= element.image.split("--")[0] %>"
                                 itemprop="thumbnail" alt="Image description" />
                               </a>
                             </figure>
@@ -201,7 +225,7 @@
             <div>
                 <div class="text d-flex">
                     <a href="#" class="online ID<%= UserCookie.id %>" >
-                      <img src="/admin/asset/images/users_photo/<%= UserCookie.image.split("--")[0] %>" alt="">
+                      <img src="/backEnd/assets/img/patients/<%= UserCookie.image.split("--")[0] %>" alt="">
                       <span>
                         <span></span>
                       </span>
@@ -226,7 +250,7 @@
                           <div class="modal-body">
                               <div class=" d-flex align-items-center">
                                 <a href="#" class="online ID<%= UserCookie.id %>">
-                                  <img src="/admin/asset/images/users_photo/<%= UserCookie.image.split('--')[0]%>" alt="">
+                                  <img src="/backEnd/assets/img/patients/<%= UserCookie.image.split('--')[0]%>" alt="">
                                   <span>
                                     <span></span>
                                   </span>
@@ -296,7 +320,7 @@
                     <div class="modal-body">
                         <div class=" d-flex align-items-center">
                           <a href="/userProfile/<%= UserCookie.id %>" class="online  ID<%= UserCookie.id %>">
-                            <img src="/admin/asset/images/users_photo/<%= UserCookie.image.split('--')[0]%>" alt="">
+                            <img src="/backEnd/assets/img/patients/<%= UserCookie.image.split('--')[0]%>" alt="">
                             <span><span></span></span>
                           </a>
                           <h5><%= UserCookie.fName + " " + UserCookie.lName %></h5>
@@ -400,7 +424,7 @@
                     <div class="pairant d-flex">
                       <div class="left">
                         <a href="/userProfile/<%= element.postsUser.id %>" class="online ID<%= element.postsUser.id %>">
-                          <img src="/admin/asset/images/users_photo/<%= element.postsUser.image.split("--")[0] %>" alt="">
+                          <img src="/backEnd/assets/img/patients/<%= element.postsUser.image.split("--")[0] %>" alt="">
                           <span><span></span></span>
                         </a>
                       </div>
@@ -438,11 +462,11 @@
                       <h5><%= element.post%></h5>
                     <% } %>
                     <% if (element.image) { %>
-                      <img src="/admin/asset/images/posts/<%= element.image.split("--")[0] %>" alt="">
+                      <img src="/backEnd/assets/img/posts_image/<%= element.image.split("--")[0] %>" alt="">
                     <% } %>
                     
                     <% if (element.video) { %>
-                      <video controls src="/admin/asset/images/posts/<%= element.video.split("--")[0] %>" alt=""></video>
+                      <video controls src="/backEnd/assets/img/posts_image/<%= element.video.split("--")[0] %>" alt=""></video>
                     <% } %>
                     
                   </div>
@@ -485,7 +509,7 @@
                           <div class="pairant d-flex">
                             <div class="image">
                               <a href="/userProfile/<%= element2.id %>" class="online ID<%= element2.postCommentUser.id %>">
-                                <img src="/admin/asset/images/users_photo/<%= element2.postCommentUser.image.split("--")[0] %>" alt="">
+                                <img src="/backEnd/assets/img/patients/<%= element2.postCommentUser.image.split("--")[0] %>" alt="">
                                 <span><span></span></span>
                               </a>
                             </div>
@@ -507,7 +531,7 @@
                                   <% element2.images.split("--").forEach(element => { %>
                                     <% if (element.trim()) { %>
                                         <div>
-                                            <img src="/admin/asset/images/commentsPhoto/<%= element %>" alt="">
+                                            <img src="/backEnd/assets/img/comment_photo/<%= element %>" alt="">
                                         </div>
                                     <% } %> 
                                   <% }) %>
@@ -552,7 +576,7 @@
                           <div class="writeComment">
                             <div class="left">
                               <a href="/userProfile/<%= UserCookie.id %>" class="online ID<%= UserCookie.id %>">
-                                <img src="/admin/asset/images/users_photo/<%= UserCookie.image.split("--")[0] %>" alt=""></a>
+                                <img src="/backEnd/assets/img/patients/<%= UserCookie.image.split("--")[0] %>" alt=""></a>
                                 <span>
                                   <span></span>
                                 </span>
@@ -596,7 +620,7 @@
                             <div class="pairant d-flex">
                               <div class="image">
                                 <a href="" class="online ID<%= element3.postCommentUser.id %>">
-                                  <img src="/admin/asset/images/users_photo/<%= element3.postCommentUser.image.split("--")[0] %>" alt="">
+                                  <img src="/backEnd/assets/img/patients/<%= element3.postCommentUser.image.split("--")[0] %>" alt="">
                                   <span>
                                     <span></span>
                                   </span>
@@ -620,7 +644,7 @@
                                     <% element3.images.split("--").forEach(element => { %>
                                       <% if (element.trim()) { %>
                                           <div>
-                                              <img src="/admin/asset/images/commentsPhoto/<%= element %>" alt="">
+                                              <img src="/backEnd/assets/img/comment_photo/<%= element %>" alt="">
                                           </div>
                                       <% } %> 
                                     <% }) %>
@@ -664,7 +688,7 @@
                             
                             <div class="writeComment">
                               <div class="left">
-                                <a href="/userProfile/<%= UserCookie.id %>"><img src="/admin/asset/images/users_photo/<%= UserCookie.image.split("--")[0] %>" alt=""></a>
+                                <a href="/userProfile/<%= UserCookie.id %>"><img src="/backEnd/assets/img/patients/<%= UserCookie.image.split("--")[0] %>" alt=""></a>
                                 <span><span></span></span>
                               </div>
                               <div>
@@ -717,7 +741,7 @@
                     <div class="writeComment d-flex">
                       <div class="left">
                         <a href="/userProfile/<%= UserCookie.id %>" class="online ID<%= UserCookie.id %>">
-                          <img src="/admin/asset/images/users_photo/<%= UserCookie.image.split("--")[0] %>" alt="">
+                          <img src="/backEnd/assets/img/patients/<%= UserCookie.image.split("--")[0] %>" alt="">
                           <span>
                             <span></span>
                           </span>
@@ -768,7 +792,7 @@
         <aside class="asideBox">
           <% chateAside.forEach(element => { %>
             <a onclick="openChate(event , '<%= element.FromChatUser.id != UserCookie.id ? element.FromChatUser.id : element.chatUser.id %>' , mackShourtCut(event))" class="online ID<%= element.FromChatUser.id != UserCookie.id ? element.FromChatUser.id : element.chatUser.id %> ">
-              <img src="/admin/asset/images/users_photo/<%= element.FromChatUser.id != UserCookie.id ? element.FromChatUser.image.split("--")[0] : element.chatUser.image.split('--')[0] %>" alt="">
+              <img src="/backEnd/assets/img/patients/<%= element.FromChatUser.id != UserCookie.id ? element.FromChatUser.image.split("--")[0] : element.chatUser.image.split('--')[0] %>" alt="">
               <span style="width:12px !important;height:12px !important">
                 <span></span>
               </span>
@@ -781,10 +805,10 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
-<%- include("../inclueds/footer_script") %>
-<%- include("../inclueds/sockitInit") %>
-<script src="/frontEnd/assets/js/moment.js"></script>
-<%- include("../inclueds/allFunctionsAndScriptsInProfile") %>
+<%- include("../include/footer_script") %>
+<%- include("../include/sockitInit") %>
+<script src="/admin/asset/js/moment.js"></script>
+<%- include("../include/allFunctionsAndScriptsInProfile") %>
 
 
 <script src="/admin/asset/vendors/js/gallery/masonry/masonry.pkgd.min.js"

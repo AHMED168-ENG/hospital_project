@@ -266,6 +266,16 @@ Version      : 1.3
       variableWidth: true,
     });
   }
+  if ($(".doctor-slider2").length > 0) {
+    $(".doctor-slider2").slick({
+      dots: false,
+      autoplay: false,
+      infinite: true,
+      variableWidth: false,
+      slidesToShow: 7,
+      speed: 0,
+    });
+  }
   if ($(".features-slider").length > 0) {
     $(".features-slider").slick({
       dots: true,

@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Sunday: DataTypes.ARRAY(DataTypes.STRING),
       Monday: DataTypes.ARRAY(DataTypes.STRING),
       Tuesday: DataTypes.ARRAY(DataTypes.STRING),
-      Wednesday: DataTypes.ARRAY(DataTypes.STRING),
+      Wenesday: DataTypes.ARRAY(DataTypes.STRING),
       Thursday: DataTypes.ARRAY(DataTypes.STRING),
       Friday: DataTypes.ARRAY(DataTypes.STRING),
       Saturday: DataTypes.ARRAY(DataTypes.STRING),
