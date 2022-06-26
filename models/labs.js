@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       province: DataTypes.STRING,
       village: DataTypes.STRING,
       phone: DataTypes.INTEGER,
+      start: DataTypes.STRING,
+      end: DataTypes.STRING,
       isActive: DataTypes.BOOLEAN,
     },
     {

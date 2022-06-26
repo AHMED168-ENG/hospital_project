@@ -54,9 +54,15 @@
 													<td><%= element.village %></td>
 													
 													<td><%= formateDate(element.createdAt) %> <br><small><%= formateDate(element.createdAt , "time") %> %> Am</small></td>
+													
 													<td>
 														<a href="/Pharmacy/activePharmacy/<%= element.id %>?isActive=<%= element.isActive ? "1" : "0" %>" class="btn btn-primary"><%= element.isActive ? "NotActive" : "active" %></a>
 														<a href="/Pharmacy/editPharmasy/<%= element.id %>" class="btn btn-success">Edit</a>
+														<form class="d-inline" action="deletePharmacy" method="post">
+															<input type="hidden" name="id" value="<%= element.id %>">
+															<input type="hidden" name="oldImage" value="<%= element.image %>">
+															<button class="btn btn-danger">Delete</button>
+														</form>
 
 													</td>
 												</tr>

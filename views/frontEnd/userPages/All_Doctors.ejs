@@ -37,11 +37,10 @@
 						<div class="col-md-8 col-12">
 							<nav aria-label="breadcrumb" class="page-breadcrumb">
 								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item"><a href="/home">Home</a></li>
 									<li class="breadcrumb-item active" aria-current="page">Search</li>
 								</ol>
 							</nav>
-							<h2 class="breadcrumb-title">2245 matches found for : Dentist In Bangalore</h2>
 						</div>
 						<div class="col-md-4 col-12 d-md-block d-none">
 							<div class="sort-by">
@@ -138,7 +137,6 @@
 												<p class="doc-speciality"><%= element.service ? element.service : "not edit yet" %></p>
 												<h5 class="doc-department"><img src="/backEnd/assets/img/specialities/<%= element.DoctorSpecialist ? element.DoctorSpecialist.image.split("--")[0] : "01.jpg" %>" class="img-fluid" alt="Speciality"><%= element.DoctorSpecialist ? element.DoctorSpecialist.name : "not Edit Before" %></h5>
 												<div class="rating">
-													
 													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 1 ? "active" :  "" %>"></i>
 													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 2 ? "active" :  "" %>"></i>
 													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 3 ? "active" :  "" %>"></i>
@@ -146,9 +144,15 @@
 													<i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 5 ? "active" :  "" %>"></i>
 													<span class="d-inline-block average-rating">(<%= element.userRate.length %>)</span>
 												</div>
-												<div class="clinic-details">
-													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <%= element.Addres %></p>
+												<% if (!element.isFree) { %>
+												 <div>
+													<span class="doc-location"><i class="fa fa-dollar-sign"></i> <%= element.price %></span>
 												</div>
+												<% } %>
+												<div class="clinic-details">
+													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <%= element.Addres ? element.Addres : "not Edit yet"%></p>
+												</div>
+											
 
 											</div>
 										</div>

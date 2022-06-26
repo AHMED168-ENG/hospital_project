@@ -63,8 +63,7 @@
                                     </div>
                                    
                                     <div class="form-group search-info">
-                                        <input type="text" class="form-control searchForUsers" placeholder="Search Doctors, Clinics, Hospitals, Diseases Etc">
-                                        <span class="form-text">Ex : Dental or Sugar Check up etc</span>
+                                        <input type="text" class="form-control searchForUsers" placeholder="Search Doctors">
                                     </div>
                                     <button type="button" onclick="gotoDocotor()" class="btn btn-primary search-btn mt-0"><i class="fas fa-search"></i> <span>Search</span></button>
                                     <div class="dataSearch">
@@ -163,7 +162,8 @@
                 <!-- Clinic and Specialities -->
                 
                 <!-- Popular Section -->
-                <section class="section section-doctor">
+                <% if (someOfActiveDoctors.length > 2) { %>
+                                <section class="section section-doctor">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-4">
@@ -184,7 +184,7 @@
                                     <div class="profile-widget">
                                         <div class="doc-img">
                                             <a href="/userProfile/<%= element.id %>">
-                                                <img class="img-fluid" style="height:170px" alt="User Image" src="/backEnd/assets/img/doctors/<%= element.userDoctorData.doctorImage.split("--")[0] %>">
+                                                <img class="img-fluid" style="height:170px" alt="User Image" src="/backEnd/assets/img/doctors/<%= element.userDoctorData.doctorImage ? element.userDoctorData.doctorImage.split("--")[0] : "avatar.png" %>">
                                             </a>
                                             <a href="javascript:void(0)" class="fav-btn">
                                                 <i class="far fa-bookmark"></i>
@@ -233,68 +233,67 @@
                         </div>
                     </div>
                 </section>
+                <% } %>
+ 
                 <!-- /Popular Section -->
-                
-                <!-- Availabe Features -->
-                <section class="section section-features">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-5 features-img">
-                                <img src="/frontEnd/assets/img/features/feature.png" class="img-fluid" alt="Feature">
+
+
+                <!-- Section Doctors With high Rate -->
+                <div class="col-12">
+                    <h2 style="color:#555;padding:30px 0 30px 20px">Doctors With High Rate</h2>
+                    <div class="doctor-rate-slider slider">
+                        <% DoctorWithHigtRate.forEach(element => { %>
+                        <!-- Doctor Widget -->
+                        <div class="profile-widget">
+                            <div class="doc-img">
+                                <a href="/userProfile/<%= element.DoctorUser.id %>">
+                                    <img class="img-fluid" style="height:170px" alt="User Image" src="/backEnd/assets/img/doctors/<%= element.doctorImage ? element.doctorImage.split("--")[0] : "avatar.png" %>">
+                                </a>
+                                <a href="javascript:void(0)" class="fav-btn">
+                                    <i class="far fa-bookmark"></i>
+                                </a>
                             </div>
-                            <div class="col-md-7">
-                                <div class="section-header">	
-                                    <h2 class="mt-2">Availabe Features in Our Clinic</h2>
-                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
-                                </div>	
-                                <div class="features-slider slider">
-                                    <!-- Slider Item -->
-                                    <div class="feature-item text-center">
-                                        <img src="/frontEnd/assets/img/features/feature-01.jpg" class="img-fluid" alt="Feature">
-                                        <p>Patient Ward</p>
+                            <div class="pro-content">
+                                <h3 class="title">
+                                    <a href="/userProfile/<%= element.DoctorUser.id %>"><%= element.fName + " " + element.lName %></a> 
+                                    <i class="fas fa-check-circle verified"></i>
+                                </h3>
+                                <p class="speciality"></p>
+                                <div class="rating">
+                                        <i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 1 ? "active" :  "" %>"></i>
+                                        <i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 2 ? "active" :  "" %>"></i>
+                                        <i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 3 ? "active" :  "" %>"></i>
+                                        <i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 4 ? "active" :  "" %>"></i>
+                                        <i class="fas fa-star <%= Math.ceil(((getRateOp(element.userRate) * 100) / (element.userRate.length * 5)) /20) >= 5 ? "active" :  "" %>"></i>
+                                    <span class="d-inline-block average-rating">(<%= element.rating %>)</span>
+                                </div>
+                                <ul class="available-info">
+                                    <li>
+                                        <i class="fas fa-map-marker-alt"></i> <%= element.Addres %>
+                                    </li>
+                                    <li>
+                                        <i class="far fa-clock"></i> <%= formateDate(element.createdAt) %>
+                                    </li>
+                                    <li>
+                                        <i class="far fa-money-bill-alt"></i> <%= element.isFree ? element.price : "free" %>
+                                    </li>
+                                </ul>
+                                <div class="row row-sm">
+                                    <div class="col-6">
+                                        <a href="/userProfile/<%= element.DoctorUser.id %>" class="btn view-btn">View Profile</a>
                                     </div>
-                                    <!-- /Slider Item -->
-                                    
-                                    <!-- Slider Item -->
-                                    <div class="feature-item text-center">
-                                        <img src="/frontEnd/assets/img/features/feature-02.jpg" class="img-fluid" alt="Feature">
-                                        <p>Test Room</p>
+                                    <div class="col-6">
+                                        <a href="/bookingDoctor/<%=element.DoctorUser.id%>" class="btn book-btn">Book Now</a>
                                     </div>
-                                    <!-- /Slider Item -->
-                                    
-                                    <!-- Slider Item -->
-                                    <div class="feature-item text-center">
-                                        <img src="/frontEnd/assets/img/features/feature-03.jpg" class="img-fluid" alt="Feature">
-                                        <p>ICU</p>
-                                    </div>
-                                    <!-- /Slider Item -->
-                                    
-                                    <!-- Slider Item -->
-                                    <div class="feature-item text-center">
-                                        <img src="/frontEnd/assets/img/features/feature-04.jpg" class="img-fluid" alt="Feature">
-                                        <p>Laboratory</p>
-                                    </div>
-                                    <!-- /Slider Item -->
-                                    
-                                    <!-- Slider Item -->
-                                    <div class="feature-item text-center">
-                                        <img src="/frontEnd/assets/img/features/feature-05.jpg" class="img-fluid" alt="Feature">
-                                        <p>Operation</p>
-                                    </div>
-                                    <!-- /Slider Item -->
-                                    
-                                    <!-- Slider Item -->
-                                    <div class="feature-item text-center">
-                                        <img src="/frontEnd/assets/img/features/feature-06.jpg" class="img-fluid" alt="Feature">
-                                        <p>Medical</p>
-                                    </div>
-                                    <!-- /Slider Item -->
                                 </div>
                             </div>
                         </div>
+                        <!-- /Doctor Widget -->
+                        <% }) %>
+
                     </div>
-                </section>		
-                <!-- /Availabe Features -->
+                </div>
+                <!-- Section Doctors With high Rate -->
                 
                 <!-- Blog Section -->
                 <section class="section section-blogs">
@@ -308,101 +307,29 @@
                         <!-- /Section Header -->
                         
                         <div class="row blog-grid-row">
+                            <% somePosts.forEach(element => { %>
                             <div class="col-md-6 col-lg-3 col-sm-12">
-                            
                                 <!-- Blog Post -->
                                 <div class="blog grid-blog">
                                     <div class="blog-image">
-                                        <a href="blog-details.html"><img class="img-fluid" src="/frontEnd/assets/img/blog/blog-01.jpg" alt="Post Image"></a>
+                                        <a href="#"><img style="height:200px" class="img-fluid" src="/backEnd/assets/img/posts_image/<%= element.userDoctorData.doctorPosts[0].image ? element.userDoctorData.doctorPosts[0].image.split("--")[0] : "15.jpg" %>" alt="Post Image"></a>
                                     </div>
                                     <div class="blog-content">
                                         <ul class="entry-meta meta-item">
                                             <li>
                                                 <div class="post-author">
-                                                    <a href="doctor-profile.html"><img src="/frontEnd/assets/img/doctors/doctor-thumb-01.jpg" alt="Post Author"> <span>Dr. Ruby Perrin</span></a>
+                                                    <a href="/userProfile/<%= element.id %>"><img src="/backEnd/assets/img/doctors/<%= element.userDoctorData.doctorImage ? element.userDoctorData.doctorImage.split("--")[0] : "avatar.png" %>" alt="Post Author"> <span>Dr. <%= element.userDoctorData.fName + " " + element.userDoctorData.lName %></span></a>
                                                 </div>
                                             </li>
-                                            <li><i class="far fa-clock"></i> 4 Dec 2019</li>
+                                            <li><i class="far fa-clock"></i> <%= formateDate(element.userDoctorData.doctorPosts.createAt , "date") %></li>
                                         </ul>
-                                        <h3 class="blog-title"><a href="blog-details.html">Doccure – Making your clinic painless visit?</a></h3>
-                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
+                                        <p class="mb-0"><%= element.userDoctorData.doctorPosts[0].post %></p>
                                     </div>
                                 </div>
                                 <!-- /Blog Post -->
                                 
-                            </div>
-                            <div class="col-md-6 col-lg-3 col-sm-12">
-                            
-                                <!-- Blog Post -->
-                                <div class="blog grid-blog">
-                                    <div class="blog-image">
-                                        <a href="blog-details.html"><img class="img-fluid" src="/frontEnd/assets/img/blog/blog-02.jpg" alt="Post Image"></a>
-                                    </div>
-                                    <div class="blog-content">
-                                        <ul class="entry-meta meta-item">
-                                            <li>
-                                                <div class="post-author">
-                                                    <a href="doctor-profile.html"><img src="/frontEnd/assets/img/doctors/doctor-thumb-02.jpg" alt="Post Author"> <span>Dr. Darren Elder</span></a>
-                                                </div>
-                                            </li>
-                                            <li><i class="far fa-clock"></i> 3 Dec 2019</li>
-                                        </ul>
-                                        <h3 class="blog-title"><a href="blog-details.html">What are the benefits of Online Doctor Booking?</a></h3>
-                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
-                                    </div>
-                                </div>
-                                <!-- /Blog Post -->
-                                
-                            </div>
-                            <div class="col-md-6 col-lg-3 col-sm-12">
-                            
-                                <!-- Blog Post -->
-                                <div class="blog grid-blog">
-                                    <div class="blog-image">
-                                        <a href="blog-details.html"><img class="img-fluid" src="/frontEnd/assets/img/blog/blog-03.jpg" alt="Post Image"></a>
-                                    </div>
-                                    <div class="blog-content">
-                                        <ul class="entry-meta meta-item">
-                                            <li>
-                                                <div class="post-author">
-                                                    <a href="doctor-profile.html"><img src="/frontEnd/assets/img/doctors/doctor-thumb-03.jpg" alt="Post Author"> <span>Dr. Deborah Angel</span></a>
-                                                </div>
-                                            </li>
-                                            <li><i class="far fa-clock"></i> 3 Dec 2019</li>
-                                        </ul>
-                                        <h3 class="blog-title"><a href="blog-details.html">Benefits of consulting with an Online Doctor</a></h3>
-                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
-                                    </div>
-                                </div>
-                                <!-- /Blog Post -->
-                                
-                            </div>
-                            <div class="col-md-6 col-lg-3 col-sm-12">
-                            
-                                <!-- Blog Post -->
-                                <div class="blog grid-blog">
-                                    <div class="blog-image">
-                                        <a href="blog-details.html"><img class="img-fluid" src="/frontEnd/assets/img/blog/blog-04.jpg" alt="Post Image"></a>
-                                    </div>
-                                    <div class="blog-content">
-                                        <ul class="entry-meta meta-item">
-                                            <li>
-                                                <div class="post-author">
-                                                    <a href="doctor-profile.html"><img src="/frontEnd/assets/img/doctors/doctor-thumb-04.jpg" alt="Post Author"> <span>Dr. Sofia Brient</span></a>
-                                                </div>
-                                            </li>
-                                            <li><i class="far fa-clock"></i> 2 Dec 2019</li>
-                                        </ul>
-                                        <h3 class="blog-title"><a href="blog-details.html">5 Great reasons to use an Online Doctor</a></h3>
-                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.</p>
-                                    </div>
-                                </div>
-                                <!-- /Blog Post -->
-                                
-                            </div>
-                        </div>
-                        <div class="view-all text-center"> 
-                            <a href="blog-list.html" class="btn btn-primary">View All</a>
+                            </div>                           
+                            <% }) %>
                         </div>
                     </div>
                 </section>

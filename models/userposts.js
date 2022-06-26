@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "postsUserTo",
         foreignKey: "to",
       });
+      userPosts.belongsTo(models.doctors, {
+        as: "PostsDoctor",
+        targetKey: "userId",
+        foreignKey: "from",
+      });
     }
   }
   userPosts.init(

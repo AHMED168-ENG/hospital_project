@@ -164,6 +164,20 @@ const allOrdersController = async (req, res, next) => {
   }
 };
 
+const deleteLap = async (req, res, next) => {
+  try {
+    await db.labs.destroy({
+      where: {
+        id: req.body.id,
+      },
+    });
+    removeImg(req, "LabsImage/", req.body.oldImage);
+    returnWithMessage(req, res, "/Labs/AllLabs", "delete success", "danger");
+  } catch (error) {
+    tryError(res, error);
+  }
+};
+
 const showOrderDataController = async (req, res, next) => {
   try {
     var order = await db.LabsOrders.findOne({
@@ -192,4 +206,6 @@ module.exports = {
   activeLabs,
   editLabsController,
   editLabsControllerPost,
+  allOrdersController,
+  deleteLap,
 };

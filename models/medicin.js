@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       village: DataTypes.STRING,
       isActive: DataTypes.BOOLEAN,
       image: DataTypes.STRING,
+      start: DataTypes.STRING,
+      end: DataTypes.STRING,
+      userId: DataTypes.INTEGER,
     },
     {
       sequelize,

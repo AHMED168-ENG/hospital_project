@@ -26,6 +26,27 @@ const { pationt_router } = require("./Router/backEnd/pationt_router");
 const { pharmacy } = require("./Router/backEnd/pharmacy.router");
 const { Labs } = require("./Router/backEnd/labs.router");
 
+const { Sequelize } = require("sequelize");
+const opts =
+  process.env.NODE_ENV === "development"
+    ? {}
+    : {
+        dialectOptions: {
+          ssl: {
+            rejectUnauthorized: false,
+            require: true,
+          },
+        },
+      };
+
+// construct a database connection
+const db_ = new Sequelize(process.env["DATABASE_URL"], opts);
+
+db_
+  .authenticate()
+  .then(() => console.log("connected to db"))
+  .catch(console.error);
+
 /*--------------------------- start sockit Io ----------------------------------*/
 var activeUser = {};
 sockitIo.on("connection", (clint) => {

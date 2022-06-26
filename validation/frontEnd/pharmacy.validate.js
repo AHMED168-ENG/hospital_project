@@ -4,16 +4,18 @@ const pharmacy_validate = () => {
   return [
     check("name")
       .notEmpty()
-      .withMessage("Enter the first name")
+      .withMessage("Enter the name")
       .isString()
       .withMessage("This field receives text")
-      .isLength({ max: 20, min: 10 })
+      .isLength({ max: 20, min: 5 })
       .withMessage(
         "name must not exceed 20 characters and must not be less than 10 characters"
       ),
     check("phone").notEmpty().withMessage("Enter the phone"),
     check("province").notEmpty().withMessage("Enter the province"),
     check("village").notEmpty().withMessage("Enter village"),
+    check("end").notEmpty().withMessage("Enter end hour"),
+    check("start").notEmpty().withMessage("Enter start hour"),
 
     check("image")
       .custom(async (value, { req }) => {

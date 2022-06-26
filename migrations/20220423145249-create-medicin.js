@@ -27,6 +27,15 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
+      userId: {
+        type: Sequelize.INTEGER,
+      },
+      start: {
+        type: Sequelize.string,
+      },
+      end: {
+        type: Sequelize.string,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -88,6 +88,30 @@
 
 											<div class="col-md-6">
 												<div class="form-group">
+													<label>Start <span class="text-danger">*</span></label>
+													<input disabled value="<%= Lab.start %>" name="start" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.start) { %>
+															<span class="text-danger"><%=validationError.start[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>End <span class="text-danger">*</span></label>
+													<input disabled value="<%= Lab.end %>" name="end" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.end) { %>
+															<span class="text-danger"><%=validationError.end[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
 													<label>Lab image <span class="text-danger">*</span></label>
 													<img style="height:250px" src="/backEnd/assets/img/LabsImage/<%= Lab.image ? Lab.image.split("--")[0] : "avatar.png"  %>" name="province" type="text" class="form-control">  
 												</div>

@@ -46,14 +46,14 @@ Router.get(
   DoctorAuthonticat,
   appointMentToday
 );
-Router.get(
-  "/acceptClient/:id",
+Router.post(
+  "/acceptClient",
   userAuthonticat,
   DoctorAuthonticat,
   AcceptAppointMent
 );
-Router.get(
-  "/cancelAppointMent/:id",
+Router.post(
+  "/cancelAppointMent",
   userAuthonticat,
   DoctorAuthonticat,
   cancelAppointMent

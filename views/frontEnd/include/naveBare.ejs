@@ -1,4 +1,81 @@
 <!-- Header -->
+<style>
+  .notifications2 {
+    color: white !important;
+    background: #09dca4;
+    margin-right: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 0 !important;
+    position: relative;
+  }
+  .notifications2 i {
+    color: white;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  .notifications2 i span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgb(232, 55, 55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  .notifications2 > div {
+    position: absolute;
+    top: calc(100% + 30px);
+    right: -50%;
+    transform: translateX(50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.4s;
+    width: 450px;
+    z-index: 2000;
+    background: white;
+    padding: 15px;
+  }
+  .notifications2 > div.active {
+    box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    visibility: visible;
+  }
+  .notifications2 > div ul li {
+    background: #eee;
+    width: 100%;
+  }
+  .notifications2 > div ul li:not(:last-of-type) {
+    margin-bottom: 15px;
+  }
+  .notifications2 > div ul li a {
+    display: flex;
+    width: 100%;
+    padding: 6px;
+    align-items: center;
+  }
+  .notifications2 > div ul li a img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+  .notifications2 > div ul li a > div p {
+    margin-left: 20px;
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+    text-transform: capitalize;
+  }
+</style>
 <header class="header">
   <nav class="navbar navbar-expand-lg header-nav">
     <div class="navbar-header" style="height: 100%">
@@ -42,6 +119,16 @@
       </ul>
     </div>
     <ul class="nav header-navbar-rht">
+      <li class="notifications2">
+        <i class="fa fa-bell-o" aria-hidden="true">
+          <% if (usernotification2NotSeen.length) { %>
+          <span><%= usernotification2NotSeen.length %></span>
+          <% } %>
+        </i>
+        <div>
+          <ul class="list-unstyled"></ul>
+        </div>
+      </li>
       <li class="nav-item contact-item">
         <div class="header-contact-img">
           <i class="far fa-hospital"></i>
@@ -120,13 +207,45 @@
           >
           <% if (doctor) { %>
           <a class="dropdown-item" href="/doctor/doctour_dashpored"
-            ><i class="far fa-fw fa-envelope"></i> Doctor Account</a
+            ><i class="fa fa-fw fa-medkit"></i> Doctor Account</a
           >
-          <% } %>
+          <a class="dropdown-item" href="/editPharmasy">
+            <i class="fa fa-fw fa-ambulance"></i> <%= myPharmacy ? "My Pharmacy"
+            : "Add Your Pharmacy" %>
+          </a>
+          <% if (myPharmacy) { %>
+
+          <a
+            class="dropdown-item"
+            style="position: relative"
+            href="/myPharmasyOrders"
+          >
+            <i class="fa fa-fw fa-ambulance"></i> My Pharmacy Orders <% if (
+            myPharmacyOrder.length) { %>
+            <span
+              style="
+                position: absolute;
+                top: 9px;
+                right: 4px;
+                background: red;
+                width: 22px;
+                height: 22px;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+              ><%= myPharmacyOrder.length %></span
+            >
+
+            <% } %>
+          </a>
+          <% } %> <% } %>
 
           <form action="/pationt/signOut" method="post">
             <button class="dropdown-item">
-              <i class="fa fa-fw fa-sign-out-alt"></i>Sign Out
+              <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
             </button>
           </form>
         </div>
@@ -135,4 +254,51 @@
     </ul>
   </nav>
 </header>
-<!-- /Header -->
+<script>
+  var notification2 = document.querySelector(".notifications2");
+  var ul22 = notification2.querySelector("ul");
+  notification2.onclick = function () {
+    notification2.querySelector("div").classList.toggle("active");
+    $.ajax({
+      url: "/userNotification2",
+      type: "post",
+      success: (data) => {
+        if (notification2.querySelector("i > span")) {
+          notification2.querySelector("i > span").remove();
+        }
+        ul22.innerHTML = "";
+        if (data.length == 0) {
+          ul22.innerHTML = `<li style="color:#000">There is no data to show</li>`;
+          return;
+        }
+        data.forEach((element) => {
+          ul22.innerHTML += `
+            <li>
+              <a href="${
+                element.typeOfNotification == "F"
+                  ? "/PharmacyData/" + element.Notification2User.userMedicin.id
+                  : "/doctorProfile/" +
+                    element.Notification2User.userDoctorData.id
+              }">
+                <img src="${
+                  element.typeOfNotification == "F"
+                    ? "/backEnd/assets/img/pharmacyImage/" +
+                      element.Notification2User.userMedicin.image.split("--")[0]
+                    : "/backEnd/assets/img/doctors/" +
+                      element.Notification2User.userDoctorData.doctorImage.split(
+                        "--"
+                      )[0]
+                }" />
+                <div>
+                  <p>${element.text}</p>
+                </div>
+              </a>
+            </li>
+          `;
+        });
+      },
+      beforeSend: () => {},
+    });
+  };
+</script>
+<!-- Header -->

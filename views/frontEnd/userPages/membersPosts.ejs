@@ -6,28 +6,24 @@
 <!-- BEGIN VENDOR CSS-->
 <link rel="stylesheet" type="text/css" href="/admin/asset/css/vendors.css">
 <link rel="stylesheet" type="text/css" href="/admin/asset/css-rtl/app.css">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@600&family=Open+Sans:wght@300;400&family=Tajawal:wght@400&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Poppins:ital,wght@0,100;0,400;1,200&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Poppins:ital,wght@0,100;0,200;1,200&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Quintessential&display=swap"
-      rel="stylesheet"
-    />
+
 <style>
 .container {
   max-width: 95% !important;
 }
+.isDoctor  {
+  padding:3px 12px;
+  border-radius: 12px;
+  color:white !important;
+  background:green;
+  font-size:10px !important;
+  margin-left:10px
+
+}
 </style>
 <%- include("../include/head")  %>
+<%- include("../include/fonts.ejs")  %>
+
   <link rel="stylesheet" href="/frontEnd/assets/css/main.css" />
 
 <head>
@@ -339,9 +335,9 @@
                 <div class="right">
                   <div class="fromNotTo d-flex">
                     <% if (element.from == element.to) { %>
-                      <a href="/userProfile/<%= element.postsUser.id %>"><h4><%= element.postsUser.fName %> <%= element.postsUser.lName %></h4></a>
+                      <a href="/userProfile/<%= element.postsUser.id %>" ><h4><%= element.postsUser.fName %> <%= element.postsUser.lName %> <span class="<%= element.postsUser.isDoctor ? "isDoctor" : "" %>"><%= element.postsUser.isDoctor ? "Doctor" : "" %></span></h4></a>
                     <% } else { %>
-                      <a class="to" href="/userProfile/<%= element.postsUser.id %>"><h4><%= element.postsUser.fName %> <%= element.postsUser.lName %></h4></a> <i class="fa fa-long-arrow-left" aria-hidden="true"></i> <a href="/userProfile/<%= element.postsUserTo.id %>"><h5><%= element.postsUserTo.fName %> <%= element.postsUserTo.lName %></h5></a>  
+                      <a class="to" href="/userProfile/<%= element.postsUser.id %>"><h4><%= element.postsUser.fName %> <%= element.postsUser.lName %><span class="<%= element.postsUser.isDoctor ? "isDoctor" : "" %>"><%= element.postsUser.isDoctor ? "Doctor" : "" %></span></h4></a> <i class="fa fa-long-arrow-left" aria-hidden="true"></i> <a href="/userProfile/<%= element.postsUserTo.id %>"><h5><%= element.postsUserTo.fName %> <%= element.postsUserTo.lName %><span class="<%= element.postsUserTo.isDoctor ? "isDoctor" : "" %>"><%= element.postsUserTo.isDoctor ? "Doctor" : "" %></span></h5></a>  
                     <% } %>
                   </div>
                   <span><%= date(element.createdAt , "date") + " " + date(element.createdAt , "time") %> <i class="fa fa-clock-o" aria-hidden="true"></i></span>

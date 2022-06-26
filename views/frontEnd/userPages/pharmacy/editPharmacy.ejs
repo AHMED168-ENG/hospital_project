@@ -1,0 +1,144 @@
+<%- include("../../include/head")  %> 
+
+<%- include("../../include/alert")  %> 
+<%- include("../../include/naveBare")  %> 
+</head>
+    </body>
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="container">
+					<div class="content container-fluid">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                        <div class="row">
+                            <div class="col-sm-12 col-auto">
+                                <h3 class="page-title text-center" style="padding:20px;background:#DDD;border-top-right-radius:60px;border-top-left-radius:60px">Edit My pharmacy</h3>
+                            </div>
+                        </div>
+                        <%- include("../../include/notification")  %> 
+                    </div>
+                    <!-- /Page Header -->
+                    <div class="row">
+			            <div class="col-md-12">
+							<form method="post" enctype="multipart/form-data">
+								<!-- Basic Information -->
+								<div class="card" style="background:#dee2e6">
+									<div class="card-body">
+										<h4 class="card-title">Basic Information</h4>
+										<div class="row form-row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<div class="change-avatar">
+														<div class="profile-img">
+															<img src="<%= myPharmacy.image ? "/backEnd/assets/img/pharmacyImage/" + myPharmacy.image.split("--")[0] : "/backEnd/assets/img/doctors/avatar.png" %>" alt="User Image">
+														</div>
+														<div class="upload-img">
+															<div class="change-photo-btn">
+																<span><i class="fa fa-upload"></i> Upload Photo</span>
+																<input type="file" class="upload" name="image">
+																<input type="hidden" value="<%= myPharmacy.image %>" name="oldImage">
+															</div>
+															<small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>name <span class="text-danger">*</span></label>
+													<input name="name" value="<%= myPharmacy.name %>" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.name) { %>
+															<span class="text-danger"><%=validationError.name[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>phone <span class="text-danger">*</span></label>
+													<input value="<%= myPharmacy.phone %>" name="phone" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.phone) { %>
+															<span class="text-danger"><%=validationError.phone[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+									
+							
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>village <span class="text-danger">*</span></label>
+													<input value="<%= myPharmacy.village %>" name="village" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.village) { %>
+															<span class="text-danger"><%=validationError.village[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>province <span class="text-danger">*</span></label>
+													<input value="<%= myPharmacy.province %>" name="province" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.province) { %>
+															<span class="text-danger"><%=validationError.province[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Start <span class="text-danger">*</span></label>
+													<input value="<%= myPharmacy.start %>" name="start" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.start) { %>
+															<span class="text-danger"><%=validationError.start[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>End <span class="text-danger">*</span></label>
+													<input value="<%= myPharmacy.end %>" name="end" type="text" class="form-control">
+													<% if (validationError) { %>
+														<% if (validationError.end) { %>
+															<span class="text-danger"><%=validationError.end[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+								<!-- /Basic Information -->
+
+						
+								<div class="submit-section submit-btn-bottom">
+									<button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+								</div>
+							</form>
+						</div>
+                    </div>
+                </div>
+				</div>			
+            </div>
+            <!-- /Page Wrapper -->
+
+
+        <%- include("../../include/footer.ejs")  %> 
+        <%- include("../../include/footer_script.ejs")  %> 
+
+    </head>
+</body>

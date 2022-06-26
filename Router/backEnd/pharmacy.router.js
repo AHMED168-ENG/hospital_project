@@ -7,6 +7,7 @@ const {
   editPharmasyControllerPost,
   allOrdersController,
   showOrderDataController,
+  deletePharmacy,
 } = require("../../controllers/backEnd/pharmacy.controller");
 
 const { uploade_img } = require("../../helper/helper");
@@ -36,6 +37,7 @@ Router.post(
   pharmacy_validate(),
   editPharmasyControllerPost
 );
+Router.post("/deletePharmacy", deletePharmacy);
 Router.get("/activePharmacy/:id", activePharmacy);
 Router.get("/allOrders", allOrdersController);
 Router.get("/showOrderData/:id", showOrderDataController);

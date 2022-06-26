@@ -266,6 +266,40 @@ Version      : 1.3
       variableWidth: true,
     });
   }
+  if ($(".doctor-rate-slider").length > 0) {
+    $(".doctor-rate-slider").slick({
+      dots: false,
+      autoplay: false,
+      infinite: true,
+      responsive: [
+        {
+          breakpoint: 2000,
+          settings: {
+            slidesToShow: 4,
+          },
+        },
+        {
+          breakpoint: 982,
+          settings: {
+            slidesToShow: 3,
+          },
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 2,
+          },
+        },
+        {
+          breakpoint: 566,
+          settings: {
+            slidesToShow: 1,
+          },
+        },
+      ],
+    });
+  }
+
   if ($(".doctor-slider2").length > 0) {
     $(".doctor-slider2").slick({
       dots: false,

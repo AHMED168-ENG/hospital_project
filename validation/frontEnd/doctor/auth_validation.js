@@ -28,17 +28,17 @@ const signUp_validation = () => {
       .isEmail()
       .withMessage("Enter email correct")
       .custom(async (value, { req }) => {
-        var user = await db.users.findOne({
+        var doctor = await db.doctors.findOne({
           where: {
             email: value,
           },
         });
         if (req.body.id) {
-          if (user && user.id != req.body.id) {
+          if (doctor && doctor.id != req.body.id) {
             throw new Error();
           }
         } else {
-          if (user) {
+          if (doctor) {
             throw new Error();
           }
         }
@@ -226,7 +226,7 @@ const DoctorSeting = () => {
       .isEmail()
       .withMessage("Enter email correct")
       .custom(async (value, { req }) => {
-        var user = await db.users.findOne({
+        var user = await db.doctors.findOne({
           where: {
             email: value,
           },

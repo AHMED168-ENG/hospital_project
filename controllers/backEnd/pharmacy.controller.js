@@ -69,6 +69,7 @@ const editPharmasyController = async (req, res, next) => {
 const editPharmasyControllerPost = async (req, res, next) => {
   try {
     var errors = validationResult(req).errors;
+    console.group(errors);
     if (errors.length > 0) {
       removeImg(req, "pharmacyImage/");
       handel_validation_errors(
@@ -155,6 +156,26 @@ const activePharmacy = async (req, res, next) => {
     tryError(res, error);
   }
 };
+
+const deletePharmacy = async (req, res, next) => {
+  try {
+    await db.medicin.destroy({
+      where: {
+        id: req.body.id,
+      },
+    });
+    removeImg(req, "pharmacyImage/", req.body.oldImage);
+    returnWithMessage(
+      req,
+      res,
+      "/pharmacy/AllPharmacy",
+      "delete success",
+      "danger"
+    );
+  } catch (error) {
+    tryError(res, error);
+  }
+};
 const allOrdersController = async (req, res, next) => {
   try {
     var allOrders = await db.pharmacyOrders.findAll({});
@@ -193,6 +214,7 @@ const showOrderDataController = async (req, res, next) => {
   }
 };
 module.exports = {
+  deletePharmacy,
   pharmacyController,
   addPharmacyController,
   showOrderDataController,

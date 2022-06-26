@@ -1,0 +1,88 @@
+<%- include("../../include/head")  %> 
+
+<%- include("../../include/alert")  %> 
+<%- include("../../include/naveBare")  %> 
+</head>
+    </body>
+        <!-- Main Wrapper -->
+        <div class="main-wrapper" >
+            <!-- Page Wrapper -->
+            <div class="page-wrapper"style="min-height:auto !important">
+                <div class="content container-fluid">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                       
+                        <%- include("../../include/notification")  %> 
+                    </div>
+                    <!-- /Page Header -->
+                    <div class="container">
+						<div class="row">
+                        <div class="col-sm-12">
+							<div class="card" style="background:#eee">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="datatable table table-hover table-center mb-0">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>phone</th>
+													<th>Addres</th>
+													<th>Date</th>
+													<th>countroll</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												<% if (allOrders.length > 0) { %>
+													<% allOrders.forEach(element => { %>
+													<tr>
+														<td>
+															<h2 class="table-avatar">
+																<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/backEnd/assets/img/pharmacyOrderImage/<%= element.image ? element.image.split("--")[0] : "avatar.png" %>" alt="User Image"></a>
+																<a href="profile.html"><%= element.name %></a>
+															</h2>
+														</td>
+														<td><%= element.phone %></td>
+														<td><%= element.addres %></td>
+														
+														<td><%= formateDate(element.createdAt) %> <br><small><%= formateDate(element.createdAt , "time") %> %> Am</small></td>
+														<td>
+															<a href="/showOrderData/<%= element.from %>" class="btn btn-success">Show Data</a>
+															<% if (!element.accept) { %>
+															 <form class="d-inline" action="/acceptOrder" method="post">
+																<input type="hidden" value="<%= element.from %>" name="userId">
+																<input type="hidden" value="<%= element.createdAt %>" name="createdAt">
+																<input type="hidden" value="<%= element.to %>" name="pharmacyId">
+																<button class="btn btn-primary">Accept</button>
+															</form>
+															<% } %>
+															<a href="/userProfile/<%= element.from %>" class="btn btn-secondary">Chat</a>
+														</td>
+													
+													</tr>
+													<% }) %>
+												<% } else { %>
+													<tr class="alert alert-danger">
+														<td colspan="5">No Orders To Show</td>
+													</tr>
+													
+												<% } %>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>	
+                    </div>
+					</div>
+                </div>			
+            </div>
+            <!-- /Page Wrapper -->        		
+
+        <%- include("../../include/footer.ejs")  %> 
+        <%- include("../../include/footer_script.ejs")  %> 
+
+
+
+    </head>
+</body>

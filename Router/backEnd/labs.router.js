@@ -5,6 +5,7 @@ const {
   editLabsController,
   editLabsControllerPost,
   activeLabs,
+  deleteLap,
 } = require("../../controllers/backEnd/labs.controller");
 const {
   addPharmacyController,
@@ -39,6 +40,7 @@ Router.post(
   editLabsControllerPost
 );
 Router.get("/activeLab/:id", activeLabs);
+Router.post("/deleteLap", deleteLap);
 
 module.exports = {
   Labs: Router,

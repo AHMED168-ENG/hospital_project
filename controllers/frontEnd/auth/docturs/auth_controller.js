@@ -44,6 +44,8 @@ const signUp_controller_post = async (req, res, next) => {
     var doctor_data = req.body;
     var hashPassword = bcrypt.hashSync(doctor_data.password, 10);
     doctor_data.password = hashPassword;
+    doctor_data.userRate = [];
+    doctor_data.rating = 0;
     doctor_data.birthImage = files.birthImage;
     doctor_data.imageGraduate = files.Graduation;
     doctor_data.userId = req.cookies.User.id;

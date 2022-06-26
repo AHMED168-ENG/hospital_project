@@ -1,4 +1,10 @@
 const {
+  pharmacy_validate,
+} = require("../../validation/frontEnd/pharmacy.validate");
+const {
+  DoctorAuthonticat,
+} = require("../../middel_ware/frontEnd/doctor/AuthonticateDoctor");
+const {
   homePage,
   All_Doctors,
   doctorProfile,
@@ -45,6 +51,15 @@ const {
   mackOrderControllerPost,
   showPharmacy,
   showLab,
+  getMyAccountPhoto,
+  editPharmasyController,
+  editPharmasyControllerPost,
+  addPharmacyController,
+  addPharmacyControllerPost,
+  allOrders,
+  orderData,
+  userNotification2,
+  acceptOrder,
 } = require("../../controllers/frontEnd/pageControllerUser");
 const { uploade_img_multi_fild, uploade_img } = require("../../Helper/helper");
 const {
@@ -59,7 +74,7 @@ const {
 
 const Router = require("express").Router();
 
-Router.get("/home", homePage);
+Router.get("/home", userAuthonticat, homePage);
 Router.get("/All_Doctors", All_Doctors);
 Router.post("/getSearchDoctorData", getSearchDoctorData);
 Router.get("/doctorProfile/:id", doctorProfile);
@@ -88,6 +103,7 @@ Router.post(
 Router.post("/getSearchData", getDataSearch_ajax);
 Router.post("/getSearchUserData", getSearchUserData);
 Router.get("/userProfile/:id", userAuthonticat, getMyAccount);
+Router.get("/getMyAccountPhoto/:id", userAuthonticat, getMyAccountPhoto);
 Router.get("/news", userAuthonticat, getMyAccount);
 Router.get(
   "/editPersonalInformation",
@@ -174,6 +190,39 @@ Router.post("/UserMessage", userAuthonticat, UserMessage);
 Router.post("/sendMessage", userAuthonticat, sendMessage);
 Router.post("/removeIsSeenFromChate", userAuthonticat, removeIsSeenFromChate);
 Router.post("/addIsSeenFromChate", userAuthonticat, addIsSeenFromChate);
+Router.get(
+  "/editPharmasy",
+  userAuthonticat,
+  DoctorAuthonticat,
+  editPharmasyController
+);
+Router.post(
+  "/editPharmasy",
+  userAuthonticat,
+  DoctorAuthonticat,
+  uploade_img("public/backEnd/assets/img/pharmacyImage", "image"),
+  pharmacy_validate(),
+  editPharmasyControllerPost
+);
+Router.get(
+  "/AddPharmacy",
+  userAuthonticat,
+  DoctorAuthonticat,
+  addPharmacyController
+);
+Router.post(
+  "/AddPharmacy",
+  userAuthonticat,
+  DoctorAuthonticat,
+  uploade_img("public/backEnd/assets/img/pharmacyImage", "image"),
+  pharmacy_validate(),
+  addPharmacyControllerPost
+);
+Router.get("/myPharmasyOrders", userAuthonticat, DoctorAuthonticat, allOrders);
+Router.get("/showOrderData/:id", userAuthonticat, DoctorAuthonticat, orderData);
+Router.post("/userNotification2", userAuthonticat, userNotification2);
+Router.post("/acceptOrder", userAuthonticat, DoctorAuthonticat, acceptOrder);
+
 module.exports = {
   userPages: Router,
 };

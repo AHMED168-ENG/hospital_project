@@ -6,37 +6,10 @@
 <!-- BEGIN VENDOR CSS-->
 <link rel="stylesheet" type="text/css" href="/admin/asset/css/vendors.css">
 <link rel="stylesheet" type="text/css" href="/admin/asset/css-rtl/app.css">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@600&family=Open+Sans:wght@300;400&family=Tajawal:wght@400&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Poppins:ital,wght@0,100;0,400;1,200&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Poppins:ital,wght@0,100;0,200;1,200&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Quintessential&display=swap"
-      rel="stylesheet"
-    />
-<%- include("../include/head")  %>
-  <link rel="stylesheet" href="/frontEnd/assets/css/main.css" />
-
+<%- include("../include/head.ejs")  %>
+<%- include("../include/fonts.ejs")  %>
+<link rel="stylesheet" href="/frontEnd/assets/css/fonts.css" />  <link rel="stylesheet" href="/frontEnd/assets/css/main.css" />
     <title><%= title %></title>
-    <style>
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      * {
-        font-family: "Tajawal", sans-serif;
-      }
-    </style>
 <head>
 <body>
   
@@ -65,7 +38,13 @@
                       alt="Card image">
                     </a>
                     <div class="userData">
-                        <h3 class="card-title"><%= user.fName + " " + user.lName %></h3>
+                        <h3 class="card-title d-flex align-items-center justify-content-between" >
+                          <%= user.fName + " " + user.lName %>
+                          <% if (user.isDoctor) { %>
+                            <span style="margin-right:10px;font-size:10px;color:white;padding:5px 20px;border-radius:10px;display:inline-block;background:green">Doctor
+                            </span>                          
+                          <% } %> 
+                        </h3>
                         <a href=""><%= userfrindesData.length %> الاصدقاء</a>
                         <div class="d-flex frindes">
                           <% userfrindesData.forEach(element => { %>
@@ -132,7 +111,7 @@
       <div class="row pairant" style="margin:0">
 
 
-        <div class="col-md-4 aside AsideScroll">
+        <div class="col-md-4 aside AsideScroll" style="z-index:200">
             <div class="content">
                 <div class="information">
                   <h3>نبذه مختصره</h3>
@@ -149,7 +128,7 @@
               <div class="images">
                 <div class="head d-flex">
                   <h4>الصور</h4>
-                  <a href="">عرض كل الصور</a>
+                  <a href="/getMyAccountPhoto/<%= UserCookie.id %>">عرض كل الصور</a>
                 </div>
                 <% if (images) { %>
                   <div class="img ">

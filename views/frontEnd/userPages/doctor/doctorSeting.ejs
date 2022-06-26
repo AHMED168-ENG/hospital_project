@@ -228,7 +228,7 @@
 											name="rating_option"
 											class="custom-control-input"
 											value="price_free"
-											<%= !doctor.isFree ? "checked" : "" %>
+											<%= doctor.isFree ? "checked" : "" %>
 											/>
 											<label class="custom-control-label" for="price_free"
 											>Free</label
@@ -243,10 +243,10 @@
 											name="rating_option"
 											value="custom_price"
 											class="custom-control-input"
-											<%= doctor.isFree ? "checked" : "" %>
+											<%= !doctor.isFree ? "checked" : "" %>
 											/>
 											<label class="custom-control-label" for="price_custom"
-											>Custom Price (per hour)</label
+											>Custom Price</label
 											>
 										</div>
 										</div>
@@ -255,7 +255,7 @@
 									<div
 										class="row custom_price_cont"
 										id="custom_price_cont"
-										style=<%= !doctor.isFree ? "display:none" : "display:block" %>
+										style=<%= doctor.isFree ? "display:none" : "display:block" %>
 									>
 										<div class="col-md-4">
 										<input

@@ -71,21 +71,25 @@ const signUp_validation = () => {
       .withMessage("Password does not match"),
     check("image")
       .custom(async (value, { req }) => {
-        if (!req.file) return true;
-        var arrayExtention = ["jpg", "png", "jpeg", "gif", "svg"];
-        var originalname = req.file.originalname.split(".");
-        var imgExtension = originalname[originalname.length - 1].toLowerCase();
-        if (!arrayExtention.includes(imgExtension)) {
-          removeImg(req, req.file.filename);
-          throw new Error("");
-        }
+        if (!req.files.length) return true;
+        req.files.forEach((element) => {
+          var arrayExtention = ["jpg", "png", "jpeg", "gif", "svg"];
+          var originalname = element.originalname.split(".");
+          var imgExtension =
+            originalname[originalname.length - 1].toLowerCase();
+          if (!arrayExtention.includes(imgExtension)) {
+            throw new Error("");
+          }
+        });
       })
       .withMessage(`The image extension must be jpg, jpeg, png, gif, svg`)
       .custom(async (value, { req }) => {
-        if (!req.file) return true;
-        if (req.file.size > 200000) {
-          throw new Error("");
-        }
+        if (!req.files.length) return true;
+        req.files.forEach((element) => {
+          if (element.size > 2000000) {
+            throw new Error("");
+          }
+        });
       })
       .withMessage("The image must not be more than 200000 kb"),
   ];

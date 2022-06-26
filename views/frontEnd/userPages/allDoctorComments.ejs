@@ -143,10 +143,12 @@ li.comment_test .comment i.active {
                                                 <p class="comment-content">
                                                     <%= element.comment %>
                                                 </p>
-                                                <div class="enterAction" id="<%= element.id%>">
-                                                    <span class="deslike <%= element.disLikeUser.includes(user.id) ? "active" : "" %>"><span><%= element.disLike %></span> <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i> </span>
-                                                    <span class="like <%= element.likeUser.includes(user.id) ? "active" : "" %>"><span><%= element.like %></span> <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i></span>
-                                                </div>
+												<% if (user) { %>
+												    <div class="enterAction" id="<%= element.id%>">
+														<span class="deslike <%= element.disLikeUser.includes(user.id) ? "active" : "" %>"><span><%= element.disLike %></span> <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i> </span>
+														<span class="like <%= element.likeUser.includes(user.id) ? "active" : "" %>"><span><%= element.like %></span> <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i></span>
+													</div>
+												<% } %>
                                             </div>
                                         </div>
                                     </li>

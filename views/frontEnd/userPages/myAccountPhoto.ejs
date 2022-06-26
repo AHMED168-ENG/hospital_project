@@ -1,0 +1,75 @@
+<%- include("../include/head.ejs") %>
+<link rel="stylesheet" href="/frontEnd/assets/css/fonts.css" />
+<link rel="stylesheet" href="/frontEnd/assets/css/main.css" />
+<title><%= title %></title>
+<style>
+  body {
+    padding: 30px 0;
+    background:#eee
+  }
+  .header h2 {
+    padding: 20px;
+    background: #5f9bd7;
+    color:white;
+    border-top-left-radius: 90px;
+    border-top-right-radius: 90px;
+    font-size:25px
+  }
+  .row {
+    background-color: white;
+    padding:50px 20px;
+    border-radius: 20px;
+    box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1);
+  }
+    .header {
+        margin-bottom: 110px;
+    }
+  .header h2 {
+    margin: 0 !important;
+  }
+  .photo {
+      border:1px solid #aaa;
+      padding:2px;
+      box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1);
+  }
+</style>
+<head>
+  <body>
+    <%- include("../include/alert") %>
+
+    <div class="allPhoto">
+      <!-- Button trigger modal -->
+
+      <div class="container" style="max-width: 90%">
+        <div class="header">
+          <h2 class="text-center">
+            All photo To <%= UserCookie.fName + " " + UserCookie.lName %>
+            Account
+          </h2>
+            <a href="/userProfile/<%= UserCookie.id %>" class="btn btn-success btn-block">My Account</a>
+        </div>
+        <div class="row">
+          <% allPhoto.forEach(element => { %>
+          <div class="col-md-4 col-sm-6">
+            <div class="photo" style="margin-bottom:20px">
+              <img style="height:300px;width:100%"
+              src="/backEnd/assets/img/posts_image/<%=
+              element.image.split("--")[0] %>" alt="">
+            </div>
+          </div>
+          <% }) %>
+        </div>
+
+        <div class="paginate" style="margin-top:20px !important">
+            <ul class="list-unstyled">
+                <% pages.forEach(element => { %>
+                    <li><a class="<%= page == element.number ? "active" : "" %>" href="<%= element.url %>"><%= element.number %></a></li>
+                <% }) %>
+            </ul>
+        </div>	
+      </div>
+    </div>
+
+    <%- include("../include/footer_script") %>
+  </body>
+</head>
