@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const server = http.createServer(app);
 const sockitIo = require("socket.io")(server);
+require("dotenv").config();
 
 const path = require("path");
 const db = require("./models");
