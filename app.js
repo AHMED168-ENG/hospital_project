@@ -41,6 +41,7 @@ const opts =
       };
 
 // construct a database connection
+console.log(process.env["DATABASE_URL"]);
 const db_ = new Sequelize(process.env["DATABASE_URL"], opts);
 
 db_
@@ -205,7 +206,6 @@ app.use((req, res, next) => {
   res.render("error", { message: "this page not hir", title: "Error Page" });
 });
 /*--------------------------- end route  ----------------------------------*/
-console.log(process.env.PORT);
 server.listen(process.env.PORT || 3001, () => {
   console.log("server starte 3001");
 });
