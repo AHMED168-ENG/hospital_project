@@ -31,10 +31,10 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       start: {
-        type: Sequelize.string,
+        type: Sequelize.STRING,
       },
       end: {
-        type: Sequelize.string,
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
