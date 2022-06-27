@@ -8,10 +8,7 @@ module.exports = {
         lName: "zaky",
         email: "ahmed@ahmed.com",
         age: 22,
-        password: bcrypt.hashSync(
-          "01024756410ahmed",
-          parseInt(process.env.BCRYPT_SEKRET_KEY)
-        ),
+        password: bcrypt.hashSync("01024756410ahmed", 10),
         addres: "domyate",
         city: "domyate",
         country: "egypt",

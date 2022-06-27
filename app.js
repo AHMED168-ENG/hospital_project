@@ -205,7 +205,7 @@ app.use((req, res, next) => {
   res.render("error", { message: "this page not hir", title: "Error Page" });
 });
 /*--------------------------- end route  ----------------------------------*/
-
+console.log(process.env.PORT);
 server.listen(process.env.PORT || 3001, () => {
   console.log("server starte 3001");
 });
