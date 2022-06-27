@@ -20,7 +20,6 @@ module.exports = {
         isAdmin: "true",
         isDoctor: "true",
         numberOfPosts: 0,
-        roles: ["U", "S"],
         mobile: "1024756410",
         active: true,
         image: "0.9936087853388536patient.jpg--",

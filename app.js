@@ -206,6 +206,6 @@ app.use((req, res, next) => {
 });
 /*--------------------------- end route  ----------------------------------*/
 
-server.listen("3001", () => {
+server.listen(process.env.PORT || 3001, () => {
   console.log("server starte 3001");
 });
